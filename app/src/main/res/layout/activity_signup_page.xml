@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignupPage">
+
+    <TextView
+        android:id="@+id/textViewSignupUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/username_text"
+        app:layout_constraintBottom_toTopOf="@+id/textSignupUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/textSignupUsername"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:autofillHints="username"
+        android:ems="10"
+        android:hint="@string/username_text"
+        android:inputType="textPersonName"
+        android:labelFor="@+id/textViewSignupUsername"
+        app:layout_constraintBottom_toTopOf="@+id/textViewPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/password_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:hint="@string/password_text"
+        android:inputType="textPassword"
+        android:labelFor="@+id/textViewPassword"
+        app:layout_constraintBottom_toTopOf="@+id/textViewPasswordConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPasswordConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/password_confirm_text"
+        app:layout_constraintBottom_toTopOf="@+id/editTextPasswordConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextPasswordConfirm"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:hint="@string/password_confirm_text"
+        android:inputType="textPassword"
+        android:labelFor="@+id/textViewPasswordConfirm"
+        app:layout_constraintBottom_toTopOf="@+id/textViewBirthDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewBirthDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:text="@string/birth_date"
+        app:layout_constraintBottom_toTopOf="@+id/editTextBirthDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextBirthDate"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:autofillHints="date"
+        android:ems="10"
+        android:hint="@string/birth_date"
+        android:inputType="date"
+        android:labelFor="@+id/textViewBirthDate"
+        app:layout_constraintBottom_toTopOf="@+id/textViewGraduationDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewGraduationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/graduation_date"
+        app:layout_constraintBottom_toTopOf="@+id/editTextGraduationDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextGraduationDate"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="36dp"
+        android:autofillHints="date"
+        android:ems="10"
+        android:hint="@string/graduation_date"
+        android:inputType="date"
+        android:labelFor="@+id/textViewGraduationDate"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSignup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:text="@string/signup_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

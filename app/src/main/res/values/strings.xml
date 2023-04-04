@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">YTÜ Graduate System</string>
+    <string name="username_text">Username</string>
+    <string name="password_text">Password</string>
+    <string name="password_confirm_text">Confirm Password</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="graduation_date">Graduation Date</string>
+    <string name="login_button">Log In</string>
+    <string name="signup_text">Do not have an account?</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="hello_world">Hello, world!</string>
+</resources>
