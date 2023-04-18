@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_name">YTÜ Graduate System</string>
-    <string name="username_text">Username</string>
-    <string name="password_text">Password</string>
-    <string name="password_confirm_text">Confirm Password</string>
-    <string name="birth_date">Birth Date</string>
-    <string name="graduation_date">Graduation Date</string>
-    <string name="login_button">Log In</string>
-    <string name="signup_text">Do not have an account?</string>
-    <string name="signup_button">Sign Up</string>
-    <string name="hello_world">Hello, world!</string>
+    <string name="app_name">YTÜ Mezun Sistemi</string>
+    <string name="fullname_text">İsim</string>
+    <string name="username_text">Kullanıcı Adı</string>
+    <string name="password_text">Parola</string>
+    <string name="password_confirm_text">Parolayı Onayla</string>
+    <string name="birth_date">Giriş Tarihi</string>
+    <string name="graduation_date">Mezuniyet Tarihi</string>
+    <string name="login_button">Giriş Yap</string>
+    <string name="signup_text">Hesabınız bulunmuyor mu?</string>
+    <string name="signup_button">Kayıt Ol</string>
+    <string name="hello_world">Merhaba, dünya!</string>
 </resources>

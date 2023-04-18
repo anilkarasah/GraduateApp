@@ -1,25 +1,26 @@
 package com.example.graduatesystem;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class User {
-    private static ArrayList<User> users = new ArrayList<User>() {
+    private static final ArrayList<User> users = new ArrayList<User>() {
         {
-            add(new User("admin", "admin", null, null));
+            add(new User("Yönetici", "admin", "admin", 2019, 2024));
         }
     };
 
+    private String fullName;
     private String username;
     private String password;
-    private Date birthDate;
-    private Date graduationDate;
+    private int registerYear;
+    private int graduationYear;
 
-    public User(String username, String password, Date birthDate, Date graduationDate) {
+    public User(String fullName, String username, String password, int registerYear, int graduationYear) {
+        this.fullName = fullName;
         this.username = username;
         this.password = password;
-        this.birthDate = birthDate;
-        this.graduationDate = graduationDate;
+        this.registerYear = registerYear;
+        this.graduationYear = graduationYear;
     }
 
     public static ArrayList<User> getUsers() {
@@ -44,6 +45,14 @@ public class User {
         return users.add(user);
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -60,19 +69,35 @@ public class User {
         this.password = password;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public int getRegisterYear() {
+        return registerYear;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setRegisterYear(int registerYear) {
+        this.registerYear = registerYear;
     }
 
-    public Date getGraduationDate() {
-        return graduationDate;
+    public int getGraduationYear() {
+        return graduationYear;
     }
 
-    public void setGraduationDate(Date graduationDate) {
-        this.graduationDate = graduationDate;
+    public void setGraduationYear(int graduationYear) {
+        this.graduationYear = graduationYear;
+    }
+
+    public static boolean validateFullName(String fullName) {
+        return fullName.length() > 0;
+    }
+
+    public static boolean validateUsername(String username) {
+        return username.length() > 0;
+    }
+
+    public static boolean validatePassword(String password) {
+        return password.length() > 0;
+    }
+
+    public static boolean validateRegisterAndGraduationYears(int registerYear, int graduationYear) {
+        return graduationYear > registerYear;
     }
 }

@@ -30,12 +30,12 @@ public class LoginPage extends AppCompatActivity {
 
             User user = User.getUser(username);
             if (user == null) {
-                Toast.makeText(getApplicationContext(), "Username is not correct.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Bu kullanıcı adına sahip kayıt bulunamadı.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (!user.getPassword().equals(password)) {
-                Toast.makeText(getApplicationContext(), "Password is not correct.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Girdiğiniz parola hatalıdır.", Toast.LENGTH_SHORT).show();
                 return;
             }
 

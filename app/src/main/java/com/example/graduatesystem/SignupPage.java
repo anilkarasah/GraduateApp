@@ -5,18 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Date;
-
 public class SignupPage extends AppCompatActivity {
+    EditText text_fullname;
     EditText text_username;
     EditText text_password;
-    EditText text_passwordConfirm;
-    EditText text_birthDate;
-    EditText text_graduationDate;
+    EditText text_registerYear;
+    EditText text_graduationYear;
     Button btn_signup;
 
     @Override
@@ -24,51 +21,50 @@ public class SignupPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
 
+        text_fullname = (EditText) findViewById(R.id.textSignupFullName);
         text_username = (EditText) findViewById(R.id.textSignupUsername);
         text_password = (EditText) findViewById(R.id.editTextPassword);
-        text_passwordConfirm = (EditText) findViewById(R.id.editTextPasswordConfirm);
-        text_birthDate = (EditText) findViewById(R.id.editTextBirthDate);
-        text_graduationDate = (EditText) findViewById(R.id.editTextGraduationDate);
+        text_registerYear = (EditText) findViewById(R.id.editTextRegisterYear);
+        text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
 
         btn_signup = (Button) findViewById(R.id.buttonSignup);
         btn_signup.setOnClickListener(view -> {
+            String fullName = text_fullname.getText().toString();
             String username = text_username.getText().toString();
             String password = text_password.getText().toString();
-            String passwordConfirm = text_passwordConfirm.getText().toString();
-            String[] birthDates = text_birthDate.getText().toString().split(".");
-            String[] graduationDates = text_graduationDate.getText().toString().split(".");
+            int registerYear = Integer.parseInt(text_registerYear.getText().toString());
+            int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
+
+            if (!User.validateFullName(fullName)) {
+                Toast.makeText(getApplicationContext(), "Lütfen geçerli bir isim giriniz.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!User.validateUsername(username)) {
+                Toast.makeText(getApplicationContext(), "Lütfen geçerli bir kullanıcı adı giriniz.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!User.validatePassword(password)) {
+                Toast.makeText(getApplicationContext(), "Lütfen geçerli bir parola giriniz.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             if (User.getUser(username) != null) {
-                Toast.makeText(getApplicationContext(), "This username already exists.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Bu kullanıcı adına sahip bir kullanıcı zaten bulunuyor.", Toast.LENGTH_SHORT).show();
                 return;
-            }
-
-            if (!password.equals(passwordConfirm)) {
-                Toast.makeText(getApplicationContext(), "Passwords do not match.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (birthDates.length != 3 || graduationDates.length != 3) {
-                Toast.makeText(getApplicationContext(), "Either one of the dates are not in correct format. Please provide 'DD.MM.YYYY'", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            int[] birthDateValues = new int[3];
-            int[] graduationDateValues = new int[3];
-            for (int i = 0; i < birthDates.length; i++) {
-                birthDateValues[i] = Integer.parseInt(birthDates[i]);
-                graduationDateValues[i] = Integer.parseInt(graduationDates[i]);
             }
 
             User user = new User(
+                    fullName,
                     username,
                     password,
-                    new Date(birthDateValues[0], birthDateValues[1], birthDateValues[2]),
-                    new Date(graduationDateValues[0], graduationDateValues[1], graduationDateValues[2]));
+                    registerYear,
+                    graduationYear);
 
             User.addUser(user);
 
-            Toast.makeText(getApplicationContext(), "Signed up successfully!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
 
             Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
             startActivity(loginActivity);
