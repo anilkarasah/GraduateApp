@@ -1,19 +1,27 @@
-package com.example.graduatesystem;
-
-import java.util.ArrayList;
+package com.example.graduatesystem.entities;
 
 public class User {
-    private static final ArrayList<User> users = new ArrayList<User>() {
-        {
-            add(new User("Yönetici", "admin", "admin", 2019, 2024));
-        }
-    };
+//    private static final ArrayList<User> users = new ArrayList<User>() {
+//        {
+//            add(new User("Yönetici", "admin", "admin", 2019, 2024));
+//        }
+//    };
 
+    private int id;
     private String fullName;
     private String username;
     private String password;
     private int registerYear;
     private int graduationYear;
+
+    public User(int id, String fullName, String username, String password, int registerYear, int graduationYear) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = password;
+        this.registerYear = registerYear;
+        this.graduationYear = graduationYear;
+    }
 
     public User(String fullName, String username, String password, int registerYear, int graduationYear) {
         this.fullName = fullName;
@@ -23,27 +31,35 @@ public class User {
         this.graduationYear = graduationYear;
     }
 
-    public static ArrayList<User> getUsers() {
-        return users;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public static User getUser(String username) {
-        for (User user : users) {
-            if (user.username.equals(username)) {
-                return user;
-            }
-        }
-
-        return null;
+    public int getId() {
+        return id;
     }
 
-    public static boolean addUser(User user) {
-        if (getUser(user.username) != null) {
-            return false;
-        }
-
-        return users.add(user);
-    }
+//    public static ArrayList<User> getUsers() {
+//        return users;
+//    }
+//
+//    public static User getUser(String username) {
+//        for (User user : users) {
+//            if (user.username.equals(username)) {
+//                return user;
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    public static boolean addUser(User user) {
+//        if (getUser(user.username) != null) {
+//            return false;
+//        }
+//
+//        return users.add(user);
+//    }
 
     public String getFullName() {
         return fullName;
@@ -100,4 +116,8 @@ public class User {
     public static boolean validateRegisterAndGraduationYears(int registerYear, int graduationYear) {
         return graduationYear > registerYear;
     }
+
+    public static final String TABLE_CREATE_QUERY =
+            "CREATE TABLE IF NOT EXISTS user" +
+                    "";
 }

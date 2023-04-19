@@ -36,30 +36,50 @@
         android:id="@+id/buttonLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/login_button"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLoginSignup"
+        app:layout_constraintBottom_toTopOf="@+id/textViewSignupPrompt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textViewLoginSignup"
+        android:id="@+id/textViewSignupPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/signup_text"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLoginSignup"
+        android:text="@string/signup_prompt"
+        app:layout_constraintBottom_toTopOf="@+id/textViewSignupButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/buttonLoginSignup"
+    <TextView
+        android:id="@+id/textViewSignupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="18dp"
         android:text="@string/signup_button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textViewOrPrompt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewOrPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/or_prompt"
+        app:layout_constraintBottom_toTopOf="@+id/textViewForgotPasswordButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewForgotPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:text="@string/forgot_password_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
