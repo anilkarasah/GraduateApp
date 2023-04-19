@@ -4,82 +4,140 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".LoginPage">
 
-    <EditText
-        android:id="@+id/textLoginUsername"
-        android:layout_width="320dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
-        android:autofillHints="username"
-        android:ems="10"
-        android:hint="@string/username_text"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/textLoginPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/textLoginPassword"
-        android:layout_width="320dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="40dp"
-        android:autofillHints="password"
-        android:ems="10"
-        android:hint="@string/password_text"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/graduateAppText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="@string/login_button"
-        app:layout_constraintBottom_toTopOf="@+id/textViewSignupPrompt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/graduateAppText"
+            app:layout_constraintStart_toStartOf="@+id/graduateAppText"
+            app:layout_constraintTop_toBottomOf="@+id/graduateAppText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/textViewSignupPrompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup_prompt"
-        app:layout_constraintBottom_toTopOf="@+id/textViewSignupButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewSignupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:text="@string/signup_button"
-        app:layout_constraintBottom_toTopOf="@+id/textViewOrPrompt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewOrPrompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/or_prompt"
-        app:layout_constraintBottom_toTopOf="@+id/textViewForgotPasswordButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewForgotPasswordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:text="@string/forgot_password_button"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/LoginLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="144dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/TextFieldLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:textAlignment="center">
+
+                <EditText
+                    android:id="@+id/textLoginUsername"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:autofillHints="username"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/username_text"
+                    android:inputType="textPersonName" />
+
+                <EditText
+                    android:id="@+id/textLoginPassword"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:autofillHints="password"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/password_text"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/buttonLogin"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_button" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/SignupLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewSignupButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signup_button" />
+
+                <TextView
+                    android:id="@+id/textViewSignupPrompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signup_prompt" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ForgotPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewOrPrompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/or_prompt" />
+
+                <TextView
+                    android:id="@+id/textViewForgotPasswordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forgot_password_button" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
