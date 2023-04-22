@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graduatesystem.db.DbHandler;
 import com.example.graduatesystem.db.UserRepository;
 import com.example.graduatesystem.entities.User;
 
@@ -19,6 +19,7 @@ public class SignupPage extends AppCompatActivity {
     EditText text_registerYear;
     EditText text_graduationYear;
     Button btn_signup;
+    TextView text_login;
 
     private UserRepository userRepository;
 
@@ -34,6 +35,11 @@ public class SignupPage extends AppCompatActivity {
         text_password = (EditText) findViewById(R.id.editTextPassword);
         text_registerYear = (EditText) findViewById(R.id.editTextRegisterYear);
         text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
+        text_login = (TextView) findViewById(R.id.textViewLoginButton);
+
+        Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
+
+        text_login.setOnClickListener(view -> startActivity(loginActivity));
 
         btn_signup = (Button) findViewById(R.id.buttonSignup);
         btn_signup.setOnClickListener(view -> {
@@ -69,7 +75,6 @@ public class SignupPage extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
 
-            Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
             startActivity(loginActivity);
         });
     }
