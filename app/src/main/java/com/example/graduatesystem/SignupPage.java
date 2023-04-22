@@ -13,7 +13,7 @@ import com.example.graduatesystem.entities.User;
 
 public class SignupPage extends AppCompatActivity {
     EditText text_fullName;
-    EditText text_username;
+    EditText text_emailAddress;
     EditText text_password;
     EditText text_registerYear;
     EditText text_graduationYear;
@@ -29,7 +29,7 @@ public class SignupPage extends AppCompatActivity {
         dbHandler = new DbHandler(SignupPage.this);
 
         text_fullName = (EditText) findViewById(R.id.textSignupFullName);
-        text_username = (EditText) findViewById(R.id.textSignupUsername);
+        text_emailAddress = (EditText) findViewById(R.id.textSignupEmailAddress);
         text_password = (EditText) findViewById(R.id.editTextPassword);
         text_registerYear = (EditText) findViewById(R.id.editTextRegisterYear);
         text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
@@ -37,7 +37,7 @@ public class SignupPage extends AppCompatActivity {
         btn_signup = (Button) findViewById(R.id.buttonSignup);
         btn_signup.setOnClickListener(view -> {
             String fullName = text_fullName.getText().toString();
-            String username = text_username.getText().toString();
+            String emailAddress = text_emailAddress.getText().toString();
             String password = text_password.getText().toString();
             int registerYear = Integer.parseInt(text_registerYear.getText().toString());
             int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
@@ -47,8 +47,8 @@ public class SignupPage extends AppCompatActivity {
                 return;
             }
 
-            if (!User.validateUsername(username)) {
-                Toast.makeText(getApplicationContext(), "Lütfen geçerli bir kullanıcı adı giriniz.", Toast.LENGTH_SHORT).show();
+            if (!User.validateEmailAddress(emailAddress)) {
+                Toast.makeText(getApplicationContext(), "Lütfen geçerli bir email adresi giriniz.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -57,19 +57,12 @@ public class SignupPage extends AppCompatActivity {
                 return;
             }
 
-//            if (User.getUser(username) != null) {
-//                Toast.makeText(getApplicationContext(), "Bu kullanıcı adına sahip bir kullanıcı zaten bulunuyor.", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-
             User user = new User(
                     fullName,
-                    username,
+                    emailAddress,
                     password,
                     registerYear,
                     graduationYear);
-
-//            User.addUser(user);
 
             dbHandler.addNewUser(user);
 

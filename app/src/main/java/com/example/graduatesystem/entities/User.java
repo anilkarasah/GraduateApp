@@ -78,8 +78,12 @@ public class User {
         return fullName.length() > 0;
     }
 
-    public static boolean validateUsername(String username) {
-        return username.length() > 0;
+    public static boolean validateEmailAddress(String emailAddress) {
+        if (emailAddress.split("@").length != 2) {
+            return false;
+        }
+
+        return emailAddress.length() > 0;
     }
 
     public static boolean validatePassword(String password) {
