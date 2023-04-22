@@ -72,8 +72,8 @@
                     android:autofillHints="username"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="@string/username_text"
                     android:inputType="textPersonName" />
+                    android:hint="@string/email_address_text"
 
                 <EditText
                     android:id="@+id/textLoginPassword"

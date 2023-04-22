@@ -41,7 +41,7 @@ public class MainPage extends AppCompatActivity {
         } else {
             text_id.setText(String.valueOf(user.getId()));
             text_fullName.setText(user.getFullName());
-            text_username.setText(user.getUsername());
+            text_username.setText(user.getEmailAddress());
             text_password.setText(user.getPassword());
             text_registerYear.setText(String.valueOf(user.getRegisterYear()));
             text_graduationYear.setText(String.valueOf(user.getGraduationYear()));

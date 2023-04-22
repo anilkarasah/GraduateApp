@@ -10,7 +10,7 @@ public class UserRepository {
     public static final String USER_TABLE_NAME = "user";
     public static final String ID_COL = "id";
     public static final String FULL_NAME_COL = "full_name";
-    public static final String USERNAME_COL = "username";
+    public static final String EMAIL_ADDRESS_COL = "username";
     public static final String PASSWORD_COL = "password";
     public static final String REGISTER_YEAR_COL = "register_year";
     public static final String GRADUATION_YEAR_COL = "graduation_year";
@@ -18,7 +18,7 @@ public class UserRepository {
     public static final String USER_TABLE_CREATE_QUERY = "CREATE TABLE IF NOT EXISTS " + USER_TABLE_NAME + " (" +
             ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             FULL_NAME_COL + " TEXT, " +
-            USERNAME_COL + " TEXT, " +
+            EMAIL_ADDRESS_COL + " TEXT, " +
             PASSWORD_COL + " TEXT, " +
             REGISTER_YEAR_COL + " INTEGER, " +
             GRADUATION_YEAR_COL + " INTEGER)";
@@ -27,7 +27,7 @@ public class UserRepository {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(FULL_NAME_COL, user.getFullName());
-        contentValues.put(USERNAME_COL, user.getUsername());
+        contentValues.put(EMAIL_ADDRESS_COL, user.getEmailAddress());
         contentValues.put(PASSWORD_COL, user.getPassword());
         contentValues.put(REGISTER_YEAR_COL, user.getRegisterYear());
         contentValues.put(GRADUATION_YEAR_COL, user.getGraduationYear());

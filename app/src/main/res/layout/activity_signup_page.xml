@@ -28,7 +28,7 @@
         android:layout_marginBottom="40dp"
         android:autofillHints="username"
         android:ems="10"
-        android:hint="@string/username_text"
+        android:hint="@string/email_address_text"
         android:inputType="textPersonName"
         android:labelFor="@+id/textViewSignupUsername"
         app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
