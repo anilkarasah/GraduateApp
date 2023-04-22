@@ -1,6 +1,5 @@
 package com.example.graduatesystem.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -20,21 +19,6 @@ public class DbHandler extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(UserRepository.USER_TABLE_CREATE_QUERY);
         sqLiteDatabase.execSQL(PostRepository.POST_TABLE_CREATE_QUERY);
-    }
-
-    public void addNewUser(User user) {
-        SQLiteDatabase database = this.getWritableDatabase();
-
-        ContentValues contentValues = UserRepository.addUserContentValues(user);
-
-        database.insert(UserRepository.USER_TABLE_NAME, null, contentValues);
-        database.close();
-    }
-
-    public User getUser(int id) {
-        SQLiteDatabase database = this.getReadableDatabase();
-
-        return UserRepository.getUser(database, id);
     }
 
     @Override

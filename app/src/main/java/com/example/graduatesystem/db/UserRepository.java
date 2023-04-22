@@ -1,6 +1,7 @@
 package com.example.graduatesystem.db;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -23,7 +24,15 @@ public class UserRepository {
             REGISTER_YEAR_COL + " INTEGER, " +
             GRADUATION_YEAR_COL + " INTEGER)";
 
-    public static ContentValues addUserContentValues(User user) {
+    private DbHandler dbHandler;
+
+    public UserRepository(Context context) {
+        dbHandler = new DbHandler(context);
+    }
+
+    public void createUser(User user) {
+        SQLiteDatabase database = dbHandler.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(FULL_NAME_COL, user.getFullName());
@@ -32,10 +41,13 @@ public class UserRepository {
         contentValues.put(REGISTER_YEAR_COL, user.getRegisterYear());
         contentValues.put(GRADUATION_YEAR_COL, user.getGraduationYear());
 
-        return contentValues;
+        database.insert(UserRepository.USER_TABLE_NAME, null, contentValues);
+        database.close();
     }
 
-    public static User getUser(SQLiteDatabase database, int id) {
+    public User getUserById(int id) {
+        SQLiteDatabase database = dbHandler.getReadableDatabase();
+
         Cursor cursor = database.rawQuery(
                 "SELECT full_name, username, password, register_year, graduation_year " +
                         "FROM " + USER_TABLE_NAME + " WHERE id = ? LIMIT 1",
@@ -49,10 +61,12 @@ public class UserRepository {
             int graduationYear = cursor.getInt(4);
 
             cursor.close();
+            database.close();
 
             return new User(id, fullName, username, password, registerYear, graduationYear);
         }
 
+        database.close();
         return null;
     }
 }

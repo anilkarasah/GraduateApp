@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.graduatesystem.db.DbHandler;
+import com.example.graduatesystem.db.UserRepository;
 import com.example.graduatesystem.entities.User;
 
 public class SignupPage extends AppCompatActivity {
@@ -19,14 +20,14 @@ public class SignupPage extends AppCompatActivity {
     EditText text_graduationYear;
     Button btn_signup;
 
-    private DbHandler dbHandler;
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
 
-        dbHandler = new DbHandler(SignupPage.this);
+        userRepository = new UserRepository(getApplicationContext());
 
         text_fullName = (EditText) findViewById(R.id.textSignupFullName);
         text_emailAddress = (EditText) findViewById(R.id.textSignupEmailAddress);
@@ -64,7 +65,7 @@ public class SignupPage extends AppCompatActivity {
                     registerYear,
                     graduationYear);
 
-            dbHandler.addNewUser(user);
+            userRepository.createUser(user);
 
             Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
 
