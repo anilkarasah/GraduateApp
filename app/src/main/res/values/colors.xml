@@ -11,4 +11,7 @@
     <color name="header_background">#222</color>
     <color name="white">#FFF</color>
     <color name="gray">#AAA</color>
+
+    <color name="color_primary">#618985</color>
+    <color name="color_secondary">#172A3A</color>
 </resources>
