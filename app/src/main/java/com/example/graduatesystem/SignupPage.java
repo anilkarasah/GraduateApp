@@ -1,5 +1,6 @@
 package com.example.graduatesystem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,15 +12,21 @@ import android.widget.Toast;
 
 import com.example.graduatesystem.db.UserRepository;
 import com.example.graduatesystem.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignupPage extends AppCompatActivity {
-    EditText text_fullName;
-    EditText text_emailAddress;
-    EditText text_password;
-    EditText text_registerYear;
-    EditText text_graduationYear;
-    Button btn_signup;
-    TextView text_login;
+    private EditText text_fullName;
+    private EditText text_emailAddress;
+    private EditText text_password;
+    private EditText text_registerYear;
+    private EditText text_graduationYear;
+    private Button btn_signup;
+    private TextView text_login;
+
+    private FirebaseAuth mAuth;
 
     private UserRepository userRepository;
 
@@ -27,6 +34,8 @@ public class SignupPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
+
+        mAuth = FirebaseAuth.getInstance();
 
         userRepository = new UserRepository(getApplicationContext());
 
@@ -71,11 +80,24 @@ public class SignupPage extends AppCompatActivity {
                     registerYear,
                     graduationYear);
 
-            userRepository.createUser(user);
+            mAuth.createUserWithEmailAndPassword(emailAddress, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Kayıt başarısız!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
 
-            Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
+//                            user.setUid(mAuth.getCurrentUser().getUid());
 
-            startActivity(loginActivity);
+                            userRepository.createUser(user);
+
+                            Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
+                            Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
+                            startActivity(loginActivity);
+                        }
+                    });
         });
     }
 }
