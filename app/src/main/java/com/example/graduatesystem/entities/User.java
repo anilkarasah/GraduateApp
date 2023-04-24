@@ -68,7 +68,7 @@ public class User {
     }
 
     public static boolean validateFullName(String fullName) {
-        return TextUtils.isEmpty(fullName);
+        return !TextUtils.isEmpty(fullName);
     }
 
     public static boolean validateEmailAddress(String emailAddress) {
@@ -76,11 +76,11 @@ public class User {
             return false;
         }
 
-        return emailAddress.split("@").length != 2;
+        return emailAddress.split("@").length == 2;
     }
 
     public static boolean validatePassword(String password) {
-        return TextUtils.isEmpty(password);
+        return !TextUtils.isEmpty(password);
     }
 
     public static boolean validateRegisterAndGraduationYears(int registerYear, int graduationYear) {

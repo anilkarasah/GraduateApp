@@ -3,6 +3,7 @@ package com.example.graduatesystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +17,8 @@ public class LoginPage extends AppCompatActivity {
     private EditText text_password;
     private Button btn_login;
     private TextView text_signup;
-    private TextView text_forgot_password;
+    private TextView text_forgotPassword;
+    private CheckBox checkBox_rememberMe;
 
     private FirebaseAuth mAuth;
 
@@ -31,7 +33,8 @@ public class LoginPage extends AppCompatActivity {
         text_password = (EditText) findViewById(R.id.textLoginPassword);
         btn_login = (Button) findViewById(R.id.buttonLogin);
         text_signup = (TextView) findViewById(R.id.textViewSignupButton);
-        text_forgot_password = (TextView) findViewById(R.id.textViewForgotPasswordButton);
+        text_forgotPassword = (TextView) findViewById(R.id.textViewForgotPasswordButton);
+        checkBox_rememberMe = (CheckBox) findViewById(R.id.checkBoxRememberMe);
 
         btn_login.setOnClickListener(view -> {
             String emailAddress = text_emailAddress.getText().toString();
@@ -59,7 +62,7 @@ public class LoginPage extends AppCompatActivity {
             startActivity(signupIntent);
         });
 
-        text_forgot_password.setOnClickListener(view -> Toast.makeText(
+        text_forgotPassword.setOnClickListener(view -> Toast.makeText(
                 getApplicationContext(),
                 "Buraya şifre sıfırlama eklenecek!",
                 Toast.LENGTH_SHORT)

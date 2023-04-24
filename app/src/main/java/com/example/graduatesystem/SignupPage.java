@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +52,12 @@ public class SignupPage extends AppCompatActivity {
             String password = text_password.getText().toString();
             int registerYear = Integer.parseInt(text_registerYear.getText().toString());
             int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
+
+            System.out.println(fullName);
+            System.out.println(emailAddress);
+            System.out.println(password);
+            System.out.println(Integer.toString(registerYear));
+            System.out.println(Integer.toString(graduationYear));
 
             if (!User.validateFullName(fullName)) {
                 Toast.makeText(getApplicationContext(), "Lütfen geçerli bir isim giriniz.", Toast.LENGTH_SHORT).show();

@@ -12,7 +12,7 @@
     <string name="have_an_account_prompt">Zaten bir hesabınız var mı?</string>
     <string name="or_prompt">veya</string>
     <string name="forgot_password_button">Şifrenizi Sıfırlayın</string>
-    <string name="hello_world">Merhaba, dünya!</string>
+    <string name="remember_me_checkbox">Beni Hatırla</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>
