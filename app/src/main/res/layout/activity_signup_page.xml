@@ -1,138 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SignupPage">
-
-    <LinearLayout
-        android:id="@+id/signupScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Header">
-
-        <EditText
-            android:id="@+id/textSignupFullName"
-            android:layout_width="320dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            android:autofillHints="username"
-            android:background="@drawable/custom_input"
-            android:drawableStart="@drawable/ic_person"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="@string/full_name_text"
-            android:inputType="textPersonName"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <EditText
-            android:id="@+id/textSignupEmailAddress"
-            android:layout_width="320dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            android:autofillHints="username"
-            android:background="@drawable/custom_input"
-            android:drawableStart="@drawable/ic_email"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="@string/email_address_text"
-            android:inputType="textEmailAddress"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <EditText
-            android:id="@+id/editTextPassword"
-            android:layout_width="320dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            android:autofillHints="password"
-            android:background="@drawable/custom_input"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="@string/password_text"
-            android:inputType="textPassword"
-            android:labelFor="@+id/textViewPassword"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <EditText
-            android:id="@+id/editTextRegisterYear"
-            android:layout_width="320dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            android:autofillHints="date"
-            android:background="@drawable/custom_input"
-            android:drawableStart="@drawable/ic_calendar"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="@string/birth_date"
-            android:inputType="date"
-            android:labelFor="@+id/textViewRegisterYear"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <EditText
-            android:id="@+id/editTextGraduationYear"
-            android:layout_width="320dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="40dp"
-            android:autofillHints="date"
-            android:background="@drawable/custom_input"
-            android:drawableStart="@drawable/ic_rocket"
-            android:drawablePadding="12dp"
-            android:ems="10"
-            android:hint="@string/graduation_date"
-            android:inputType="date"
-            android:labelFor="@+id/textViewGraduationYear"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <Button
-            android:id="@+id/buttonSignup"
-            android:layout_width="144dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/custom_button"
-            android:gravity="center"
-            android:text="@string/signup_button"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/textViewLoginPrompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/have_an_account_prompt" />
-
-        <TextView
-            android:id="@+id/textViewLoginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_button"
-            android:textColor="@color/color_primary"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/header"
-        android:paddingTop="48dp"
-        android:paddingBottom="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
         <TextView
             android:id="@+id/graduateAppText"
@@ -162,4 +43,122 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        android:id="@+id/LoginView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/textSignupFullName"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:autofillHints="username"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="@string/full_name_text"
+                android:inputType="textPersonName"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp" />
+
+            <EditText
+                android:id="@+id/textSignupEmailAddress"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:autofillHints="username"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="@string/email_address_text"
+                android:inputType="textEmailAddress"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp" />
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:autofillHints="password"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="@string/password_text"
+                android:inputType="textPassword"
+                android:labelFor="@+id/textViewPassword"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp" />
+
+            <EditText
+                android:id="@+id/editTextRegisterYear"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:autofillHints="date"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="@string/birth_date"
+                android:inputType="date"
+                android:labelFor="@+id/textViewRegisterYear"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp" />
+
+            <EditText
+                android:id="@+id/editTextGraduationYear"
+                android:layout_width="320dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="32dp"
+                android:autofillHints="date"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/ic_graduation"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="@string/graduation_date"
+                android:inputType="date"
+                android:labelFor="@+id/textViewGraduationYear"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp" />
+
+            <Button
+                android:id="@+id/buttonSignup"
+                android:layout_width="144dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/custom_button"
+                android:gravity="center"
+                android:text="@string/signup_button"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textViewLoginPrompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/have_an_account_prompt" />
+
+            <TextView
+                android:id="@+id/textViewLoginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_button"
+                android:textColor="@color/color_primary"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

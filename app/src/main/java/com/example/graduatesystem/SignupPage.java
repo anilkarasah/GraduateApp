@@ -1,6 +1,5 @@
 package com.example.graduatesystem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,12 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graduatesystem.db.UserRepository;
 import com.example.graduatesystem.entities.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignupPage extends AppCompatActivity {
     private EditText text_fullName;
@@ -27,8 +23,7 @@ public class SignupPage extends AppCompatActivity {
     private TextView text_login;
 
     private FirebaseAuth mAuth;
-
-    private UserRepository userRepository;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +31,7 @@ public class SignupPage extends AppCompatActivity {
         setContentView(R.layout.activity_signup_page);
 
         mAuth = FirebaseAuth.getInstance();
-
-        userRepository = new UserRepository(getApplicationContext());
+        db = FirebaseFirestore.getInstance();
 
         text_fullName = (EditText) findViewById(R.id.textSignupFullName);
         text_emailAddress = (EditText) findViewById(R.id.textSignupEmailAddress);
@@ -73,31 +67,36 @@ public class SignupPage extends AppCompatActivity {
                 return;
             }
 
-            User user = new User(
+            mAuth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener(this, task -> {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Kayıt başarısız!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String uid = mAuth.getCurrentUser().getUid();
+                User user = new User(
+                    uid,
                     fullName,
                     emailAddress,
                     password,
                     registerYear,
                     graduationYear);
 
-            mAuth.createUserWithEmailAndPassword(emailAddress, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Kayıt başarısız!", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-
-//                            user.setUid(mAuth.getCurrentUser().getUid());
-
-                            userRepository.createUser(user);
-
-                            Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
-                            Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
-                            startActivity(loginActivity);
-                        }
-                    });
+                db.collection("users")
+                    .document(mAuth.getCurrentUser().getUid())
+                    .set(user)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
+                        Intent loginActivity1 = new Intent(getApplicationContext(), LoginPage.class);
+                        startActivity(loginActivity1);
+                    })
+                    .addOnFailureListener(e ->
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Kayıt işlemi başarısız oldu!",
+                                Toast.LENGTH_LONG)
+                            .show());
+            });
         });
     }
 }

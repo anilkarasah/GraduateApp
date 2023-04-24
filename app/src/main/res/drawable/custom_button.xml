@@ -7,7 +7,6 @@
         android:endColor="@color/color_primary"
         android:startColor="@color/color_secondary"
         android:type="linear" />
-    <!--    <solid android:color="@color/color_secondary" />-->
     <corners android:radius="99999dp" />
 
 </shape>

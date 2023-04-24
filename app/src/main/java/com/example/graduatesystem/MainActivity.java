@@ -1,12 +1,8 @@
 package com.example.graduatesystem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.TextView;
 
-import com.example.graduatesystem.db.DbHandler;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 

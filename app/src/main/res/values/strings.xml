@@ -8,12 +8,12 @@
     <string name="graduation_date">Mezuniyet Yılı</string>
     <string name="login_button">Giriş Yap</string>
     <string name="signup_prompt">Bir hesabınız yok mu?</string>
-    <string name="signup_button">Kayıt Ol</string>
+    <string name="signup_button">Kayıt Olun</string>
     <string name="have_an_account_prompt">Zaten bir hesabınız var mı?</string>
     <string name="or_prompt">veya</string>
     <string name="forgot_password_button">Şifrenizi Sıfırlayın</string>
     <string name="hello_world">Merhaba, dünya!</string>
 
-    <string name="title_login_page">Giriş Ekranı</string>
-    <string name="title_signup_page">Kayıt Olma Ekranı</string>
+    <string name="title_login_page">Sisteme Giriş Yap</string>
+    <string name="title_signup_page">Hesap Oluştur</string>
 </resources>
