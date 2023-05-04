@@ -3,7 +3,6 @@ package com.example.graduatesystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ public class LoginPage extends AppCompatActivity {
     private Button btn_login;
     private TextView text_signup;
     private TextView text_forgotPassword;
-    private CheckBox checkBox_rememberMe;
 
     private FirebaseAuth mAuth;
 
@@ -34,7 +32,6 @@ public class LoginPage extends AppCompatActivity {
         btn_login = (Button) findViewById(R.id.buttonLogin);
         text_signup = (TextView) findViewById(R.id.textViewSignupButton);
         text_forgotPassword = (TextView) findViewById(R.id.textViewForgotPasswordButton);
-        checkBox_rememberMe = (CheckBox) findViewById(R.id.checkBoxRememberMe);
 
         btn_login.setOnClickListener(view -> {
             String emailAddress = text_emailAddress.getText().toString();
@@ -43,12 +40,7 @@ public class LoginPage extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener(this, task -> {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Email adresi veya parola hatalı!",
-                                Toast.LENGTH_SHORT)
-                            .show();
-
+                        Toast.makeText(getApplicationContext(), "Email adresi veya parola hatalı!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 

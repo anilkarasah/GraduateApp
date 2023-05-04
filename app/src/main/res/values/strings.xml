@@ -13,6 +13,11 @@
     <string name="or_prompt">veya</string>
     <string name="forgot_password_button">Şifrenizi Sıfırlayın</string>
     <string name="remember_me_checkbox">Beni Hatırla</string>
+    <string name="profile_picture_description">Profil Fotoğrafı</string>
+    <string name="take_picture_button">Fotoğraf Çek</string>
+    <string name="upload_picture_button">Fotoğraf Yükle</string>
+    <string name="no_app_supporting">Bu işlemi destekleyen uygulama bulunamadı.</string>
+    <string name="camera_permission_required">Bu işlem için kamera izni gereklidir.</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>

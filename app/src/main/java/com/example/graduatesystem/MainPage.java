@@ -1,17 +1,18 @@
 package com.example.graduatesystem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.graduatesystem.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Map;
 
 public class MainPage extends AppCompatActivity {
 
@@ -19,11 +20,14 @@ public class MainPage extends AppCompatActivity {
     private TextView text_fullName;
     private TextView text_emailAddress;
     private TextView text_password;
-    private TextView text_registerYear;
+    private TextView text_registrationYear;
     private TextView text_graduationYear;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    private Map<String, Object> map;
+    private boolean retrievedUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,34 +41,24 @@ public class MainPage extends AppCompatActivity {
         text_fullName = (TextView) findViewById(R.id.textViewFullName);
         text_emailAddress = (TextView) findViewById(R.id.textViewEmailAddress);
         text_password = (TextView) findViewById(R.id.textViewPassword);
-        text_registerYear = (TextView) findViewById(R.id.textViewRegisterYear);
+        text_registrationYear = (TextView) findViewById(R.id.textViewRegistrationYear);
         text_graduationYear = (TextView) findViewById(R.id.textViewGraduationYear);
 
-        FirebaseUser user = mAuth.getCurrentUser();
-
-        Intent loginIntent = new Intent(getApplicationContext(), LoginPage.class);
-        if (user == null) {
+        retrievedUserData = savedInstanceState.getBoolean("retrievedUserData");
+        if (!retrievedUserData) {
+            Intent loginIntent = new Intent(this, LoginPage.class);
             startActivity(loginIntent);
+            Toast.makeText(this, "User is null", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
 
-        text_id.setText(user.getUid());
-        text_emailAddress.setText(user.getEmail());
+        text_id.setText(savedInstanceState.getString(User.UID));
+        text_emailAddress.setText(savedInstanceState.getString(User.EMAIL_ADDRESS));
 
-        db.collection("users")
-            .document(user.getUid())
-            .get()
-            .addOnSuccessListener(document -> {
-                if (document.exists()) {
-                    User userRecord = document.toObject(User.class);
-                    text_fullName.setText(userRecord.getFullName());
-                    text_registerYear.setText(userRecord.getRegisterYear());
-                    text_graduationYear.setText(userRecord.getGraduationYear());
-
-                    startActivity(loginIntent);
-                }
-            });
+        text_fullName.setText(savedInstanceState.getString(User.FULL_NAME));
+        text_registrationYear.setText(savedInstanceState.getString(User.REGISTRATION_YEAR));
+        text_graduationYear.setText(savedInstanceState.getString(User.GRADUATION_YEAR));
     }
 }

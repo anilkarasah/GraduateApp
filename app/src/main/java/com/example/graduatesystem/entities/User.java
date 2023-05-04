@@ -3,28 +3,41 @@ package com.example.graduatesystem.entities;
 import android.text.TextUtils;
 
 public class User {
+    public static final String UID = "uid";
+    public static final String FULL_NAME = "fullName";
+    public static final String EMAIL_ADDRESS = "emailAddress";
+    public static final String REGISTRATION_YEAR = "registrationYear";
+    public static final String GRADUATION_YEAR = "graduationYear";
+
     private String uid;
     private String fullName;
     private String emailAddress;
     private String password;
-    private int registerYear;
+    private int registrationYear;
     private int graduationYear;
 
-    public User(String uid, String fullName, String emailAddress, String password, int registerYear, int graduationYear) {
+    public User() {
+    }
+
+    public User(String uid, String fullName, String emailAddress, String password, int registrationYear, int graduationYear) {
         this.uid = uid;
         this.fullName = fullName;
         this.emailAddress = emailAddress;
         this.password = password;
-        this.registerYear = registerYear;
+        this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
     }
 
-    public User(String fullName, String emailAddress, String password, int registerYear, int graduationYear) {
+    public User(String fullName, String emailAddress, String password, int registrationYear, int graduationYear) {
         this.fullName = fullName;
         this.emailAddress = emailAddress;
         this.password = password;
-        this.registerYear = registerYear;
+        this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getFullName() {
@@ -51,12 +64,12 @@ public class User {
         this.password = password;
     }
 
-    public int getRegisterYear() {
-        return registerYear;
+    public int getRegistrationYear() {
+        return registrationYear;
     }
 
-    public void setRegisterYear(int registerYear) {
-        this.registerYear = registerYear;
+    public void setRegistrationYear(int registrationYear) {
+        this.registrationYear = registrationYear;
     }
 
     public int getGraduationYear() {
