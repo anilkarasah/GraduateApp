@@ -12,26 +12,23 @@ public class User {
     private String uid;
     private String fullName;
     private String emailAddress;
-    private String password;
     private int registrationYear;
     private int graduationYear;
 
     public User() {
     }
 
-    public User(String uid, String fullName, String emailAddress, String password, int registrationYear, int graduationYear) {
+    public User(String uid, String fullName, String emailAddress, int registrationYear, int graduationYear) {
         this.uid = uid;
         this.fullName = fullName;
         this.emailAddress = emailAddress;
-        this.password = password;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
     }
 
-    public User(String fullName, String emailAddress, String password, int registrationYear, int graduationYear) {
+    public User(String fullName, String emailAddress, int registrationYear, int graduationYear) {
         this.fullName = fullName;
         this.emailAddress = emailAddress;
-        this.password = password;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
     }
@@ -54,14 +51,6 @@ public class User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public int getRegistrationYear() {

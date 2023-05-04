@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,12 +22,17 @@ import com.example.graduatesystem.entities.User;
 import com.example.graduatesystem.utils.CameraUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class SignupPage extends AppCompatActivity {
     private EditText text_fullName;
     private EditText text_emailAddress;
     private EditText text_password;
-    private EditText text_registerYear;
+    private EditText text_registrationYear;
     private EditText text_graduationYear;
     private Button btn_signup;
     private TextView text_login;
@@ -36,6 +42,9 @@ public class SignupPage extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
+
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +53,43 @@ public class SignupPage extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         text_fullName = (EditText) findViewById(R.id.textSignupFullName);
         text_emailAddress = (EditText) findViewById(R.id.textSignupEmailAddress);
         text_password = (EditText) findViewById(R.id.editTextPassword);
-        text_registerYear = (EditText) findViewById(R.id.editTextRegisterYear);
+        text_registrationYear = (EditText) findViewById(R.id.editTextRegisterYear);
         text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
         text_login = (TextView) findViewById(R.id.textViewLoginButton);
         image_avatar = (ImageView) findViewById(R.id.imageViewAvatar);
 
-        Intent loginActivity = new Intent(getApplicationContext(), LoginPage.class);
+        Intent loginActivity = new Intent(this, LoginPage.class);
 
         text_login.setOnClickListener(view -> startActivity(loginActivity));
 
         btn_signup = (Button) findViewById(R.id.buttonSignup);
-        btn_signup.setOnClickListener(view -> signupUser());
+        btn_signup.setOnClickListener(view -> {
+            String fullName = text_fullName.getText().toString();
+            String emailAddress = text_emailAddress.getText().toString();
+            String password = text_password.getText().toString();
+            int registrationYear = Integer.parseInt(text_registrationYear.getText().toString());
+            int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
 
-        ActivityResultLauncher activityResultLauncher = registerForActivityResult(
+            if (!validateUserData(fullName, emailAddress)) {
+                return;
+            }
+
+            signupUserToAuthentication(emailAddress, password);
+
+            User user = new User(fullName, emailAddress, registrationYear, graduationYear);
+            createUserRecordToFirestore(user);
+
+            uploadImageToStorage();
+
+            startActivity(loginActivity);
+        });
+
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() != RESULT_OK || result.getData() == null) {
@@ -101,58 +130,57 @@ public class SignupPage extends AppCompatActivity {
         }
     }
 
-    private void signupUser() {
-        String fullName = text_fullName.getText().toString();
-        String emailAddress = text_emailAddress.getText().toString();
-        String password = text_password.getText().toString();
-        int registerYear = Integer.parseInt(text_registerYear.getText().toString());
-        int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
+    private void uploadImageToStorage() {
+        Bitmap bitmap = ((BitmapDrawable) image_avatar.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+        byte[] data = baos.toByteArray();
 
+        StorageReference reference = storage.getReference()
+            .child("profiles/" + this.uid + ".jpg");
+
+        UploadTask uploadTask = reference.putBytes(data);
+        uploadTask.addOnFailureListener(e ->
+            Toast.makeText(SignupPage.this, "Profil fotoğrafı yüklenirken hata oluştu.", Toast.LENGTH_SHORT).show());
+
+        Log.d("uploadImage", "ulaştık");
+    }
+
+    private boolean validateUserData(String fullName, String emailAddress) {
         if (!User.validateFullName(fullName)) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir isim giriniz.", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         if (!User.validateEmailAddress(emailAddress)) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir email adresi giriniz.", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
-        if (!User.validatePassword(password)) {
-            Toast.makeText(getApplicationContext(), "Lütfen geçerli bir parola giriniz.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        return true;
+    }
 
-        mAuth.createUserWithEmailAndPassword(emailAddress, password).addOnCompleteListener(this, task -> {
-            if (!task.isSuccessful()) {
-                Toast.makeText(getApplicationContext(), "Kayıt başarısız!", Toast.LENGTH_LONG).show();
-                return;
-            }
+    private void signupUserToAuthentication(String emailAddress, String password) {
+        mAuth.createUserWithEmailAndPassword(emailAddress, password)
+            .addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                } else {
+                    this.uid = task.getResult().getUser().getUid();
+                }
+            });
+    }
 
-            String uid = mAuth.getCurrentUser().getUid();
-            User user = new User(
-                uid,
-                fullName,
-                emailAddress,
-                password,
-                registerYear,
-                graduationYear);
+    private void createUserRecordToFirestore(User user) {
+        db.collection("users")
+            .document(uid)
+            .set(user)
+            .addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
 
-            db.collection("users")
-                .document(mAuth.getCurrentUser().getUid())
-                .set(user)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(getApplicationContext(), "Başarıyla kayıt oldunuz!", Toast.LENGTH_LONG).show();
-
-                    Intent loginActivity = new Intent(this, LoginPage.class);
-                    startActivity(loginActivity);
-                })
-                .addOnFailureListener(e ->
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Kayıt işlemi başarısız oldu!",
-                            Toast.LENGTH_LONG)
-                        .show());
-        });
+                Log.d("createUser", "ulaştık");
+            });
     }
 }
