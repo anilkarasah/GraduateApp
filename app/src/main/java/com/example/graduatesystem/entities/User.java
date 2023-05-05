@@ -2,6 +2,8 @@ package com.example.graduatesystem.entities;
 
 import android.text.TextUtils;
 
+import java.util.Date;
+
 public class User {
     public static final String UID = "uid";
     public static final String FULL_NAME = "fullName";
@@ -31,6 +33,10 @@ public class User {
         this.emailAddress = emailAddress;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getUid() {
@@ -69,11 +75,11 @@ public class User {
         this.graduationYear = graduationYear;
     }
 
-    public static boolean validateFullName(String fullName) {
+    public boolean validateFullName() {
         return !TextUtils.isEmpty(fullName);
     }
 
-    public static boolean validateEmailAddress(String emailAddress) {
+    public boolean validateEmailAddress() {
         if (TextUtils.isEmpty(emailAddress)) {
             return false;
         }
@@ -81,11 +87,7 @@ public class User {
         return emailAddress.split("@").length == 2;
     }
 
-    public static boolean validatePassword(String password) {
-        return !TextUtils.isEmpty(password);
-    }
-
-    public static boolean validateRegisterAndGraduationYears(int registerYear, int graduationYear) {
-        return graduationYear > registerYear;
+    public boolean validateRegisterAndGraduationYears() {
+        return graduationYear > registrationYear;
     }
 }

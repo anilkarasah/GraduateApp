@@ -26,6 +26,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 
 public class SignupPage extends AppCompatActivity {
@@ -43,8 +45,6 @@ public class SignupPage extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
-
-    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +75,35 @@ public class SignupPage extends AppCompatActivity {
             int registrationYear = Integer.parseInt(text_registrationYear.getText().toString());
             int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
 
-            if (!validateUserData(fullName, emailAddress)) {
+            User user = new User(fullName, emailAddress, registrationYear, graduationYear);
+
+            if (!validateUserData(user)) {
                 return;
             }
 
-            signupUserToAuthentication(emailAddress, password);
+            mAuth.createUserWithEmailAndPassword(emailAddress, password)
+                .addOnCompleteListener(authTask -> {
+                    if (!authTask.isSuccessful()) {
+                        Toast.makeText(this, authTask.getException().toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-            User user = new User(fullName, emailAddress, registrationYear, graduationYear);
-            createUserRecordToFirestore(user);
+                    String uid = authTask.getResult().getUser().getUid();
+                    user.setUid(uid);
+                    db.collection("users")
+                        .document(uid)
+                        .set(user)
+                        .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show());
 
-            uploadImageToStorage();
+                    byte[] data = getBitmapData(image_avatar);
+                    storage.getReference()
+                        .child("profiles/" + uid + ".jpg")
+                        .putBytes(data)
+                        .addOnFailureListener(e -> Log.d("signup/storage", e.toString()));
 
-            startActivity(loginActivity);
+                    Toast.makeText(this, "Başarıyla kayıt oldunuz!", Toast.LENGTH_SHORT).show();
+                    startActivity(loginActivity);
+                });
         });
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
@@ -130,57 +147,29 @@ public class SignupPage extends AppCompatActivity {
         }
     }
 
-    private void uploadImageToStorage() {
-        Bitmap bitmap = ((BitmapDrawable) image_avatar.getDrawable()).getBitmap();
+    private byte[] getBitmapData(ImageView imageView) {
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-        byte[] data = baos.toByteArray();
-
-        StorageReference reference = storage.getReference()
-            .child("profiles/" + this.uid + ".jpg");
-
-        UploadTask uploadTask = reference.putBytes(data);
-        uploadTask.addOnFailureListener(e ->
-            Toast.makeText(SignupPage.this, "Profil fotoğrafı yüklenirken hata oluştu.", Toast.LENGTH_SHORT).show());
-
-        Log.d("uploadImage", "ulaştık");
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 
-    private boolean validateUserData(String fullName, String emailAddress) {
-        if (!User.validateFullName(fullName)) {
+    private boolean validateUserData(User user) {
+        if (!user.validateFullName()) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir isim giriniz.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (!User.validateEmailAddress(emailAddress)) {
+        if (!user.validateEmailAddress()) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir email adresi giriniz.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        if (!user.validateRegisterAndGraduationYears()) {
+            Toast.makeText(this, "Mezuniyet tarihi, kayıt tarihinden sonra olmalıdır.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
-    }
-
-    private void signupUserToAuthentication(String emailAddress, String password) {
-        mAuth.createUserWithEmailAndPassword(emailAddress, password)
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                } else {
-                    this.uid = task.getResult().getUser().getUid();
-                }
-            });
-    }
-
-    private void createUserRecordToFirestore(User user) {
-        db.collection("users")
-            .document(uid)
-            .set(user)
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                }
-
-                Log.d("createUser", "ulaştık");
-            });
     }
 }
