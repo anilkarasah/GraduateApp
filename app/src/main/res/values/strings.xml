@@ -18,6 +18,8 @@
     <string name="upload_picture_button">Fotoğraf Yükle</string>
     <string name="no_app_supporting">Bu işlemi destekleyen uygulama bulunamadı.</string>
     <string name="camera_permission_required">Bu işlem için kamera izni gereklidir.</string>
+    <string name="send_confirmation_email_button">Doğrula</string>
+    <string name="go_back_button">Geri Dön</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>

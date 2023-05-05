@@ -21,12 +21,9 @@ import android.widget.Toast;
 import com.example.graduatesystem.entities.User;
 import com.example.graduatesystem.utils.CameraUtils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 
@@ -56,7 +53,7 @@ public class SignupPage extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
 
         text_fullName = (EditText) findViewById(R.id.textSignupFullName);
-        text_emailAddress = (EditText) findViewById(R.id.textSignupEmailAddress);
+        text_emailAddress = (EditText) findViewById(R.id.textConfirmEmailAddress);
         text_password = (EditText) findViewById(R.id.editTextPassword);
         text_registrationYear = (EditText) findViewById(R.id.editTextRegisterYear);
         text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
@@ -64,7 +61,6 @@ public class SignupPage extends AppCompatActivity {
         image_avatar = (ImageView) findViewById(R.id.imageViewAvatar);
 
         Intent loginActivity = new Intent(this, LoginPage.class);
-
         text_login.setOnClickListener(view -> startActivity(loginActivity));
 
         btn_signup = (Button) findViewById(R.id.buttonSignup);
@@ -82,13 +78,11 @@ public class SignupPage extends AppCompatActivity {
             }
 
             mAuth.createUserWithEmailAndPassword(emailAddress, password)
-                .addOnCompleteListener(authTask -> {
-                    if (!authTask.isSuccessful()) {
-                        Toast.makeText(this, authTask.getException().toString(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser firebaseUser = authResult.getUser();
 
-                    String uid = authTask.getResult().getUser().getUid();
+                    String uid = firebaseUser.getUid();
                     user.setUid(uid);
                     db.collection("users")
                         .document(uid)
@@ -101,8 +95,11 @@ public class SignupPage extends AppCompatActivity {
                         .putBytes(data)
                         .addOnFailureListener(e -> Log.d("signup/storage", e.toString()));
 
-                    Toast.makeText(this, "Başarıyla kayıt oldunuz!", Toast.LENGTH_SHORT).show();
-                    startActivity(loginActivity);
+                    firebaseUser.sendEmailVerification()
+                        .addOnCompleteListener(task -> {
+                            Toast.makeText(this, "Başarıyla kayıt oldunuz!", Toast.LENGTH_SHORT).show();
+                            startActivity(loginActivity);
+                        });
                 });
         });
 

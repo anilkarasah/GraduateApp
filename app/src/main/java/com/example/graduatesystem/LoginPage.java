@@ -54,10 +54,9 @@ public class LoginPage extends AppCompatActivity {
             startActivity(signupIntent);
         });
 
-        btn_forgotPassword.setOnClickListener(view -> Toast.makeText(
-                getApplicationContext(),
-                "Buraya şifre sıfırlama eklenecek!",
-                Toast.LENGTH_SHORT)
-            .show());
+        btn_forgotPassword.setOnClickListener(view -> {
+            Intent forgotPasswordIntent = new Intent(this, ForgotPassword.class);
+            startActivity(forgotPasswordIntent);
+        });
     }
 }
