@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">YTÜ Mezun Sistemi</string>
-    <string name="full_name_text">İsim</string>
+    <string name="full_name_text">İsim, Soyisim</string>
     <string name="email_address_text">Email Adresi</string>
     <string name="password_text">Parola</string>
     <string name="password_confirm_text">Parolayı Onayla</string>
@@ -29,8 +29,16 @@
     <string name="email_address_section_title">Email Adresiniz</string>
     <string name="password_section_title">Parolanız</string>
     <string name="new_password_text">Yeni Parola</string>
+    <string name="current_company_text">Çalıştığınız Ülke, Şehir, Firma</string>
+    <string name="phone_number_text">Telefon Numarası</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>
     <string name="title_profile_page">Profiliniz</string>
+
+    <string-array name="degree_types">
+        <item>Lisans</item>
+        <item>Yüksek Lisans</item>
+        <item>Doktora</item>
+    </string-array>
 </resources>

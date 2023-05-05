@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Map;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private ImageView image_profilePicture;
     private Button btn_takePicture;
     private Button btn_uploadPicture;
@@ -30,6 +34,8 @@ public class Profile extends AppCompatActivity {
     private EditText text_fullName;
     private EditText text_registrationYear;
     private EditText text_graduationYear;
+    private EditText text_currentCompany;
+    private Spinner spinner_degree;
     private Button btn_updateProfileInfo;
 
     private EditText text_emailAddress;
@@ -61,6 +67,8 @@ public class Profile extends AppCompatActivity {
         text_fullName = (EditText) findViewById(R.id.textProfileFullName);
         text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
         text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
+        text_currentCompany = (EditText) findViewById(R.id.textProfileCurrentCompany);
+        spinner_degree = (Spinner) findViewById(R.id.spinnerDegree);
         btn_updateProfileInfo = (Button) findViewById(R.id.buttonUpdateProfile);
 
         text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
@@ -109,18 +117,25 @@ public class Profile extends AppCompatActivity {
                 image_profilePicture.setImageBitmap(profilePictureBitmap);
             });
 
+        // SET SPINNER VALUES FOR STUDENT DEGREE
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+            this, R.array.degree_types, android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_degree.setAdapter(adapter);
+        spinner_degree.setOnItemSelectedListener(this);
+
+
         // UPDATE EMAIL ADDRESS SECTION
         btn_updateEmailAddress.setOnClickListener(view -> {
             String emailAddress = text_emailAddress.getText().toString();
             firebaseUser.verifyBeforeUpdateEmail(emailAddress)
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-                .addOnSuccessListener(unused -> {
-                    db.collection("users")
-                        .document(firebaseUser.getUid())
-                        .update(User.EMAIL_ADDRESS, emailAddress)
-                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-                        .addOnSuccessListener(unused1 -> redirectToLogin());
-                });
+                .addOnSuccessListener(unused -> db.collection("users")
+                    .document(firebaseUser.getUid())
+                    .update(User.EMAIL_ADDRESS, emailAddress)
+                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(unused1 -> redirectToLogin()));
         });
 
         // UPDATE PASSWORD SECTION
@@ -156,5 +171,15 @@ public class Profile extends AppCompatActivity {
         Toast.makeText(this, "Lütfen tekrar giriş yapınız.", Toast.LENGTH_SHORT).show();
         Intent loginIntent = new Intent(this, LoginPage.class);
         startActivity(loginIntent);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

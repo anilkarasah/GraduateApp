@@ -52,17 +52,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/profilePictureLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:id="@+id/textViewPicture"
@@ -130,13 +129,20 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <LinearLayout
                 android:id="@+id/profileInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:id="@+id/textViewPrimary"
@@ -174,7 +180,6 @@
                     android:ems="10"
                     android:hint="@string/birth_date"
                     android:inputType="date"
-                    android:labelFor="@+id/textViewRegistrationYear"
                     android:paddingStart="16dp"
                     android:paddingEnd="12dp" />
 
@@ -182,7 +187,7 @@
                     android:id="@+id/textProfileGraduationYear"
                     android:layout_width="320dp"
                     android:layout_height="48dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="12dp"
                     android:autofillHints="date"
                     android:background="@drawable/custom_input"
                     android:drawableStart="@drawable/ic_graduation"
@@ -190,14 +195,52 @@
                     android:ems="10"
                     android:hint="@string/graduation_date"
                     android:inputType="date"
-                    android:labelFor="@+id/textViewGraduationYear"
                     android:paddingStart="16dp"
                     android:paddingEnd="12dp" />
+
+                <EditText
+                    android:id="@+id/textProfilePhoneNumber"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:autofillHints="date"
+                    android:background="@drawable/custom_input"
+                    android:drawableStart="@drawable/ic_phone"
+                    android:drawablePadding="8dp"
+                    android:ems="10"
+                    android:hint="@string/phone_number_text"
+                    android:inputType="phone"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="12dp" />
+
+                <EditText
+                    android:id="@+id/textProfileCurrentCompany"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:autofillHints="date"
+                    android:background="@drawable/custom_input"
+                    android:drawableStart="@drawable/ic_business"
+                    android:drawablePadding="8dp"
+                    android:ems="10"
+                    android:hint="@string/current_company_text"
+                    android:inputType="date"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="12dp" />
+
+                <Spinner
+                    android:id="@+id/spinnerDegree"
+                    android:layout_width="320dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/custom_input"
+                    android:spinnerMode="dropdown" />
 
                 <Button
                     android:id="@+id/buttonUpdateProfile"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/custom_button"
                     android:gravity="center"
                     android:text="@string/update_info_button"
@@ -206,13 +249,20 @@
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <LinearLayout
                 android:id="@+id/emailAddressLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:id="@+id/textViewEmailAddressSection"
@@ -250,13 +300,20 @@
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <LinearLayout
                 android:id="@+id/profilePasswordLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:id="@+id/textViewProfileUpdatePassword"
