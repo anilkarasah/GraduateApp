@@ -24,7 +24,7 @@ public class ForgotPassword extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        editText_emailAddress = (EditText) findViewById(R.id.textConfirmEmailAddress);
+        editText_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
         btn_confirmEmailAddress = (Button) findViewById(R.id.buttonSendConfirmationEmail);
         btn_goBack = (Button) findViewById(R.id.buttonGoBack);
 

@@ -53,6 +53,11 @@ public class MainPage extends AppCompatActivity {
         text_graduationYear = (TextView) findViewById(R.id.textViewGraduationYear);
         imageView_avatar = (ImageView) findViewById(R.id.imageViewMainAvatar);
 
+        imageView_avatar.setOnClickListener(view -> {
+            Intent profileIntent = new Intent(this, Profile.class);
+            startActivity(profileIntent);
+        });
+
         String uid = getIntent().getExtras().getString("uid");
         if (uid == null || TextUtils.isEmpty(uid)) {
             Intent loginIntent = new Intent(this, LoginPage.class);
@@ -68,7 +73,6 @@ public class MainPage extends AppCompatActivity {
             .get()
             .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(documentSnapshot -> {
-                Log.i("mainPage", "onCreate: verileri aldık");
                 Map<String, Object> map = documentSnapshot.getData();
                 String fullName = map.get(User.FULL_NAME).toString();
                 String emailAddress = map.get(User.EMAIL_ADDRESS).toString();
@@ -77,12 +81,10 @@ public class MainPage extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
 
-                Log.i("mainPage", "onCreate: verileri aldık2");
                 text_emailAddress.setText(emailAddress);
                 text_fullName.setText(fullName);
                 text_registrationYear.setText(registrationYear);
                 text_graduationYear.setText(graduationYear);
-                Log.i("mainPage", "onCreate: verileri aldık3");
             });
 
         final long TWO_MEGABYTES = 2 * 1024 * 1024;
@@ -91,7 +93,6 @@ public class MainPage extends AppCompatActivity {
             .getBytes(TWO_MEGABYTES)
             .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(bytes -> {
-                Log.i("mainPage", "onCreate: görseli aldık");
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageView_avatar.setImageBitmap(bitmap);
             });

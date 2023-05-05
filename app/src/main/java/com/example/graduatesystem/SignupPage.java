@@ -52,18 +52,18 @@ public class SignupPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        text_fullName = (EditText) findViewById(R.id.textSignupFullName);
-        text_emailAddress = (EditText) findViewById(R.id.textConfirmEmailAddress);
-        text_password = (EditText) findViewById(R.id.editTextPassword);
-        text_registrationYear = (EditText) findViewById(R.id.editTextRegisterYear);
-        text_graduationYear = (EditText) findViewById(R.id.editTextGraduationYear);
+        text_fullName = (EditText) findViewById(R.id.textProfileFullName);
+        text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
+        text_password = (EditText) findViewById(R.id.textProfileCurrentPassword);
+        text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
+        text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
         text_login = (TextView) findViewById(R.id.textViewLoginButton);
         image_avatar = (ImageView) findViewById(R.id.imageViewAvatar);
 
         Intent loginActivity = new Intent(this, LoginPage.class);
         text_login.setOnClickListener(view -> startActivity(loginActivity));
 
-        btn_signup = (Button) findViewById(R.id.buttonSignup);
+        btn_signup = (Button) findViewById(R.id.buttonUpdateProfile);
         btn_signup.setOnClickListener(view -> {
             String fullName = text_fullName.getText().toString();
             String emailAddress = text_emailAddress.getText().toString();
@@ -116,7 +116,7 @@ public class SignupPage extends AppCompatActivity {
             }
         );
 
-        btn_takePicture = (Button) findViewById(R.id.buttonTakePicture);
+        btn_takePicture = (Button) findViewById(R.id.buttonProfileTakePicture);
         btn_takePicture.setOnClickListener(view -> {
             CameraUtils.askCameraPermissions(this);
 
@@ -128,7 +128,7 @@ public class SignupPage extends AppCompatActivity {
             }
         });
 
-        btn_uploadPicture = (Button) findViewById(R.id.buttonUploadPicture);
+        btn_uploadPicture = (Button) findViewById(R.id.buttonProfileUploadPicture);
         btn_uploadPicture.setOnClickListener(view ->
             Toast.makeText(getApplicationContext(), "Resim yüklenecek!", Toast.LENGTH_SHORT).show());
     }
