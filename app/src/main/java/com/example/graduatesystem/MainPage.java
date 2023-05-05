@@ -31,6 +31,9 @@ public class MainPage extends AppCompatActivity {
     private TextView text_emailAddress;
     private TextView text_registrationYear;
     private TextView text_graduationYear;
+    private TextView text_phoneNumber;
+    private TextView text_currentCompany;
+    private TextView text_graduationDegree;
     private ImageView imageView_avatar;
 
     private FirebaseAuth mAuth;
@@ -51,6 +54,9 @@ public class MainPage extends AppCompatActivity {
         text_emailAddress = (TextView) findViewById(R.id.textViewEmailAddress);
         text_registrationYear = (TextView) findViewById(R.id.textViewRegistrationYear);
         text_graduationYear = (TextView) findViewById(R.id.textViewGraduationYear);
+        text_phoneNumber = (TextView) findViewById(R.id.textViewPhoneNumber);
+        text_currentCompany = (TextView) findViewById(R.id.textViewCurrentCompany);
+        text_graduationDegree = (TextView) findViewById(R.id.textViewGraduationDegree);
         imageView_avatar = (ImageView) findViewById(R.id.imageViewMainAvatar);
 
         imageView_avatar.setOnClickListener(view -> {
@@ -78,6 +84,15 @@ public class MainPage extends AppCompatActivity {
                 String emailAddress = map.get(User.EMAIL_ADDRESS).toString();
                 String registrationYear = map.get(User.REGISTRATION_YEAR).toString();
                 String graduationYear = map.get(User.GRADUATION_YEAR).toString();
+
+                Object phoneNumber = map.get(User.PHONE_NUMBER);
+                if (phoneNumber != null && !TextUtils.isEmpty(phoneNumber.toString())) text_phoneNumber.setText(phoneNumber.toString());
+
+                Object currentCompany = map.get(User.CURRENT_COMPANY);
+                if (currentCompany != null && !TextUtils.isEmpty(currentCompany.toString())) text_currentCompany.setText(currentCompany.toString());
+
+                Object degree = map.get(User.GRADUATION_DEGREE);
+                if (degree != null && !TextUtils.isEmpty(degree.toString())) text_graduationDegree.setText(degree.toString());
 
                 Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
 

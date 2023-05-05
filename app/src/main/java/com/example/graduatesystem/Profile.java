@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,7 +36,9 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
     private EditText text_registrationYear;
     private EditText text_graduationYear;
     private EditText text_currentCompany;
+    private EditText text_phoneNumber;
     private Spinner spinner_degree;
+    private int selectedDegreeIndex = 0;
     private Button btn_updateProfileInfo;
 
     private EditText text_emailAddress;
@@ -51,6 +54,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
 
     private FirebaseUser firebaseUser;
     private User user;
+    Map<String, Object> map;
 
     private Bitmap profilePictureBitmap;
 
@@ -68,6 +72,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
         text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
         text_currentCompany = (EditText) findViewById(R.id.textProfileCurrentCompany);
+        text_phoneNumber = (EditText) findViewById(R.id.textProfilePhoneNumber);
         spinner_degree = (Spinner) findViewById(R.id.spinnerDegree);
         btn_updateProfileInfo = (Button) findViewById(R.id.buttonUpdateProfile);
 
@@ -94,7 +99,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             .get()
             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(documentSnapshot -> {
-                Map<String, Object> map = documentSnapshot.getData();
+                map = documentSnapshot.getData();
                 String fullName = map.get(User.FULL_NAME).toString();
                 String emailAddress = map.get(User.EMAIL_ADDRESS).toString();
                 String registrationYear = map.get(User.REGISTRATION_YEAR).toString();
@@ -104,6 +109,18 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
                 text_emailAddress.setText(emailAddress);
                 text_registrationYear.setText(registrationYear);
                 text_graduationYear.setText(graduationYear);
+
+                Object phoneNumber = map.get(User.PHONE_NUMBER);
+                if (phoneNumber != null && !TextUtils.isEmpty(phoneNumber.toString()))
+                    text_phoneNumber.setText(phoneNumber.toString());
+
+                Object currentCompany = map.get(User.CURRENT_COMPANY);
+                if (currentCompany != null)
+                    text_currentCompany.setText(currentCompany.toString());
+
+                Object degree = map.get(User.GRADUATION_DEGREE);
+                if (degree != null)
+                    spinner_degree.setPrompt(degree.toString());
             });
 
         // SET PROFILE PICTURE AS IMAGE VIEW
@@ -125,6 +142,39 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         spinner_degree.setAdapter(adapter);
         spinner_degree.setOnItemSelectedListener(this);
 
+        // UPDATE USER INFORMATION SECTION
+        btn_updateProfileInfo.setOnClickListener(view -> {
+            String fullName = text_fullName.getText().toString();
+            Integer registrationYear = Integer.parseInt(text_registrationYear.getText().toString());
+            Integer graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
+            String phoneNumber = text_phoneNumber.getText().toString();
+            String currentCompany = text_currentCompany.getText().toString();
+
+            String[] degreesList = getResources().getStringArray(R.array.degree_types);
+            String selectedDegree = degreesList[this.selectedDegreeIndex];
+
+            if (user == null) {
+                redirectToLogin();
+            }
+
+            map.put(User.FULL_NAME, fullName);
+            map.put(User.REGISTRATION_YEAR, registrationYear);
+            map.put(User.GRADUATION_YEAR, graduationYear);
+            map.put(User.PHONE_NUMBER, phoneNumber);
+            map.put(User.CURRENT_COMPANY, currentCompany);
+            map.put(User.GRADUATION_DEGREE, selectedDegree);
+
+            db.collection("users")
+                .document(firebaseUser.getUid())
+                .update(map)
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Profil bilgileri başarıyla güncellendi.", Toast.LENGTH_SHORT).show();
+
+                    Intent mainPageIntent = new Intent(this, MainPage.class);
+                    startActivity(mainPageIntent);
+                });
+        });
 
         // UPDATE EMAIL ADDRESS SECTION
         btn_updateEmailAddress.setOnClickListener(view -> {
@@ -175,11 +225,11 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+        selectedDegreeIndex = i;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        selectedDegreeIndex = 0;
     }
 }

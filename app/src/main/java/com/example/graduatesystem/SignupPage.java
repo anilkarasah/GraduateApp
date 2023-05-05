@@ -71,9 +71,9 @@ public class SignupPage extends AppCompatActivity {
             int registrationYear = Integer.parseInt(text_registrationYear.getText().toString());
             int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
 
-            User user = new User(fullName, emailAddress, registrationYear, graduationYear);
+            User user = new User(fullName, emailAddress, registrationYear, graduationYear, null, null, null);
 
-            if (!validateUserData(user)) {
+            if (!validateUserData(user, emailAddress)) {
                 return;
             }
 
@@ -151,13 +151,13 @@ public class SignupPage extends AppCompatActivity {
         return baos.toByteArray();
     }
 
-    private boolean validateUserData(User user) {
+    private boolean validateUserData(User user, String emailAddress) {
         if (!user.validateFullName()) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir isim giriniz.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (!user.validateEmailAddress()) {
+        if (!User.validateEmailAddress(emailAddress)) {
             Toast.makeText(getApplicationContext(), "Lütfen geçerli bir email adresi giriniz.", Toast.LENGTH_SHORT).show();
             return false;
         }

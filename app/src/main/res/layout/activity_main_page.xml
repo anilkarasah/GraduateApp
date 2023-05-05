@@ -38,6 +38,24 @@
         android:layout_height="wrap_content"
         android:text="Graduation Year" />
 
+    <TextView
+        android:id="@+id/textViewPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number" />
+
+    <TextView
+        android:id="@+id/textViewCurrentCompany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Company" />
+
+    <TextView
+        android:id="@+id/textViewGraduationDegree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Graduation Degree" />
+
     <ImageView
         android:id="@+id/imageViewMainAvatar"
         android:layout_width="match_parent"
