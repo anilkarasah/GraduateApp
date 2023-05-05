@@ -1,17 +1,27 @@
 package com.example.graduatesystem;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.graduatesystem.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class MainPage extends AppCompatActivity {
@@ -19,15 +29,13 @@ public class MainPage extends AppCompatActivity {
     private TextView text_id;
     private TextView text_fullName;
     private TextView text_emailAddress;
-    private TextView text_password;
     private TextView text_registrationYear;
     private TextView text_graduationYear;
+    private ImageView imageView_avatar;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
-    private Map<String, Object> map;
-    private boolean retrievedUserData;
+    private FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +44,56 @@ public class MainPage extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         text_id = (TextView) findViewById(R.id.textViewId);
         text_fullName = (TextView) findViewById(R.id.textViewFullName);
         text_emailAddress = (TextView) findViewById(R.id.textViewEmailAddress);
-        text_password = (TextView) findViewById(R.id.textViewPassword);
         text_registrationYear = (TextView) findViewById(R.id.textViewRegistrationYear);
         text_graduationYear = (TextView) findViewById(R.id.textViewGraduationYear);
+        imageView_avatar = (ImageView) findViewById(R.id.imageViewMainAvatar);
 
-        retrievedUserData = savedInstanceState.getBoolean("retrievedUserData");
-        if (!retrievedUserData) {
+        String uid = getIntent().getExtras().getString("uid");
+        if (uid == null || TextUtils.isEmpty(uid)) {
             Intent loginIntent = new Intent(this, LoginPage.class);
+            Toast.makeText(this, "Lütfen tekrar giriş yapın!", Toast.LENGTH_SHORT).show();
             startActivity(loginIntent);
-            Toast.makeText(this, "User is null", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
+        text_id.setText(uid);
 
-        text_id.setText(savedInstanceState.getString(User.UID));
-        text_emailAddress.setText(savedInstanceState.getString(User.EMAIL_ADDRESS));
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+            .addOnSuccessListener(documentSnapshot -> {
+                Log.i("mainPage", "onCreate: verileri aldık");
+                Map<String, Object> map = documentSnapshot.getData();
+                String fullName = map.get(User.FULL_NAME).toString();
+                String emailAddress = map.get(User.EMAIL_ADDRESS).toString();
+                String registrationYear = map.get(User.REGISTRATION_YEAR).toString();
+                String graduationYear = map.get(User.GRADUATION_YEAR).toString();
 
-        text_fullName.setText(savedInstanceState.getString(User.FULL_NAME));
-        text_registrationYear.setText(savedInstanceState.getString(User.REGISTRATION_YEAR));
-        text_graduationYear.setText(savedInstanceState.getString(User.GRADUATION_YEAR));
+                Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
+
+                Log.i("mainPage", "onCreate: verileri aldık2");
+                text_emailAddress.setText(emailAddress);
+                text_fullName.setText(fullName);
+                text_registrationYear.setText(registrationYear);
+                text_graduationYear.setText(graduationYear);
+                Log.i("mainPage", "onCreate: verileri aldık3");
+            });
+
+        final long TWO_MEGABYTES = 2 * 1024 * 1024;
+        storage.getReference()
+            .child("profiles/" + uid + ".jpg")
+            .getBytes(TWO_MEGABYTES)
+            .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+            .addOnSuccessListener(bytes -> {
+                Log.i("mainPage", "onCreate: görseli aldık");
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_avatar.setImageBitmap(bitmap);
+            });
     }
 }

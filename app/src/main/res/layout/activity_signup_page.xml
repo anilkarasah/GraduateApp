@@ -150,6 +150,7 @@
                     android:background="@drawable/custom_button_inactive"
                     android:contentDescription="@string/profile_picture_description"
                     android:padding="8dp"
+                    android:src="@drawable/ic_person"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <Button
