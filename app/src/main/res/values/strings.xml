@@ -22,9 +22,11 @@
     <string name="go_back_button">Geri Dön</string>
     <string name="update_picture_button">Fotoğrafı Güncelle</string>
     <string name="update_info_button">Bilgileri Güncelle</string>
+    <string name="update_email_address_button">Adresi Güncelle</string>
     <string name="update_password_button">Parolayı Güncelle</string>
     <string name="profile_picture_section_title">Profil Fotoğrafınız</string>
     <string name="primary_info_section_title">Bilgileriniz</string>
+    <string name="email_address_section_title">Email Adresiniz</string>
     <string name="password_section_title">Parolanız</string>
     <string name="new_password_text">Yeni Parola</string>
 

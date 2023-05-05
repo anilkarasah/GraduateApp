@@ -71,7 +71,7 @@ public class MainPage extends AppCompatActivity {
         db.collection("users")
             .document(uid)
             .get()
-            .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(documentSnapshot -> {
                 Map<String, Object> map = documentSnapshot.getData();
                 String fullName = map.get(User.FULL_NAME).toString();
@@ -91,7 +91,7 @@ public class MainPage extends AppCompatActivity {
         storage.getReference()
             .child("profiles/" + uid + ".jpg")
             .getBytes(TWO_MEGABYTES)
-            .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(bytes -> {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageView_avatar.setImageBitmap(bitmap);

@@ -1,7 +1,5 @@
 package com.example.graduatesystem;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +9,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.graduatesystem.entities.User;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,10 +28,12 @@ public class Profile extends AppCompatActivity {
     private Button btn_updateProfilePicture;
 
     private EditText text_fullName;
-    private EditText text_emailAddress;
     private EditText text_registrationYear;
     private EditText text_graduationYear;
     private Button btn_updateProfileInfo;
+
+    private EditText text_emailAddress;
+    private Button btn_updateEmailAddress;
 
     private EditText text_currentPassword;
     private EditText text_newPassword;
@@ -55,10 +59,12 @@ public class Profile extends AppCompatActivity {
         btn_updateProfilePicture = (Button) findViewById(R.id.buttonUpdatePicture);
 
         text_fullName = (EditText) findViewById(R.id.textProfileFullName);
-        text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
         text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
         text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
         btn_updateProfileInfo = (Button) findViewById(R.id.buttonUpdateProfile);
+
+        text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
+        btn_updateEmailAddress = (Button) findViewById(R.id.buttonUpdateEmailAddress);
 
         text_currentPassword = (EditText) findViewById(R.id.textProfileCurrentPassword);
         text_newPassword = (EditText) findViewById(R.id.textProfileNewPassword);
@@ -73,16 +79,12 @@ public class Profile extends AppCompatActivity {
             redirectToLogin();
             return;
         }
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+        // SET USER INFORMATION IN CORRESPONDING EDIT TEXT
         db.collection("users")
             .document(firebaseUser.getUid())
             .get()
-            .addOnFailureListener(e -> redirectToLogin())
+            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(documentSnapshot -> {
                 Map<String, Object> map = documentSnapshot.getData();
                 String fullName = map.get(User.FULL_NAME).toString();
@@ -96,15 +98,58 @@ public class Profile extends AppCompatActivity {
                 text_graduationYear.setText(graduationYear);
             });
 
+        // SET PROFILE PICTURE AS IMAGE VIEW
         final long TWO_MEGABYTES = 2 * 1024 * 1024;
         storage.getReference()
             .child("profiles/" + firebaseUser.getUid() + ".jpg")
             .getBytes(TWO_MEGABYTES)
-            .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show())
+            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(bytes -> {
                 profilePictureBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 image_profilePicture.setImageBitmap(profilePictureBitmap);
             });
+
+        // UPDATE EMAIL ADDRESS SECTION
+        btn_updateEmailAddress.setOnClickListener(view -> {
+            String emailAddress = text_emailAddress.getText().toString();
+            firebaseUser.verifyBeforeUpdateEmail(emailAddress)
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(unused -> {
+                    db.collection("users")
+                        .document(firebaseUser.getUid())
+                        .update(User.EMAIL_ADDRESS, emailAddress)
+                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(unused1 -> redirectToLogin());
+                });
+        });
+
+        // UPDATE PASSWORD SECTION
+        btn_updatePassword.setOnClickListener(view -> {
+            String emailAddress;
+            if (firebaseUser == null || (emailAddress = firebaseUser.getEmail()) == null) {
+                redirectToLogin();
+                return;
+            }
+
+            String currentPassword = text_currentPassword.getText().toString();
+
+            AuthCredential credential = EmailAuthProvider
+                .getCredential(emailAddress, currentPassword);
+
+            firebaseUser.reauthenticate(credential)
+                .addOnFailureListener(e -> Toast.makeText(this, "Geçerli parola yanlış girildi.", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(unused -> {
+                    String newPassword = text_newPassword.getText().toString();
+                    firebaseUser.updatePassword(newPassword)
+                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                        .addOnSuccessListener(unused1 -> {
+                            Toast.makeText(this, "Parola başarıyla güncellendi.", Toast.LENGTH_SHORT).show();
+                            text_currentPassword.setText("");
+                            text_newPassword.setText("");
+                            redirectToLogin();
+                        });
+                });
+        });
     }
 
     private void redirectToLogin() {
