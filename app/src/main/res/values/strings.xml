@@ -34,10 +34,12 @@
     <string name="phone_number_text">Telefon Numarası</string>
     <string name="announcement_image">Duyuru görseli</string>
     <string name="user_image">Profil fotoğrafı</string>
+    <string name="valid_until_prompt">Geçerlilik tarihi:</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>
     <string name="title_profile_page">Profiliniz</string>
+    <string name="title_main_page">Ana Sayfa</string>
 
     <string-array name="degree_types">
         <item>Lisans</item>

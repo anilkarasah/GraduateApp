@@ -1,86 +1,91 @@
 package com.example.graduatesystem;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.graduatesystem.entities.Model;
+import com.example.graduatesystem.entities.Post;
 import com.example.graduatesystem.entities.User;
-import com.example.graduatesystem.utils.RecyclerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.graduatesystem.utils.CameraUtils;
+import com.example.graduatesystem.utils.PostAdapter;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainPage extends AppCompatActivity {
     private RecyclerView recyclerView;
 
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private final ArrayList<Model> models = new ArrayList<>();
+    private final ArrayList<Post> posts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        models.add(new Model(Model.TYPE_POST, 0, "Bu bir gönderidir!"));
-        models.add(new Model(Model.TYPE_POST, 0, "Bu başka bir gönderi!"));
-        models.add(new Model(Model.TYPE_ANNOUNCEMENT, 0, "Bu da görselli bir gönderi!"));
-        models.add(new Model(Model.TYPE_POST, 0, "Lorem ipsum dolor sit amet!"));
-        models.add(new Model(Model.TYPE_POST, 0, "Bir şeyler deniyorum!"));
-        models.add(new Model(Model.TYPE_ANNOUNCEMENT, 0, "Bu da başka bir görselli gönderi!"));
-        models.add(new Model(Model.TYPE_POST, 0, "Bunu da ekleyelim!"));
+        PostAdapter postAdapter = new PostAdapter(posts, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(postAdapter);
 
-
-        db.collection("users")
+        db.collection("posts")
             .get()
             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(querySnapshot -> {
+                Log.i("mainPage", "onCreate: query başına geldik!");
                 for (QueryDocumentSnapshot document : querySnapshot) {
                     Map<String, Object> map = document.getData();
-                    String fullName = map.get(User.FULL_NAME).toString();
-                    int registrationYear = Integer.parseInt(map.get(User.REGISTRATION_YEAR).toString());
-                    int graduationYear = Integer.parseInt(map.get(User.GRADUATION_YEAR).toString());
 
-                    Model model = new Model(
-                        Model.TYPE_USER,
-                        0,
-                        String.format("%s (%d-%d)", fullName, registrationYear, graduationYear)
-                    );
+                    String text = map.get(Post.TEXT).toString();
+                    String authorId = map.get(Post.AUTHOR_ID).toString();
+                    Date postedAt = document.getTimestamp(Post.POSTED_AT).toDate();
+                    Date validUntil = document.getTimestamp(Post.VALID_UNTIL).toDate();
 
-                    RecyclerAdapter recyclerAdapter = new RecyclerAdapter(models, this);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(recyclerAdapter);
+                    Post post = new Post(Post.TEXT_TYPE, authorId, text, postedAt, validUntil);
+                    posts.add(post);
+
+                    db.collection("users")
+                        .document(authorId)
+                        .get()
+                        .addOnFailureListener(e -> Log.i("MainPage/GetAuthor", e.getMessage()))
+                        .addOnSuccessListener(snapshot -> {
+                            String fullName = snapshot.getData().get(User.FULL_NAME).toString();
+                            post.setAuthorFullName(fullName);
+
+                            postAdapter.notifyItemChanged(posts.indexOf(post));
+                        });
+
+                    storage.getReference()
+                        .child("profiles/" + authorId + ".jpg")
+                        .getBytes(CameraUtils.TWO_MEGABYTES)
+                        .addOnFailureListener(e -> Log.i("MainPage/Avatar", e.getMessage()))
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap authorProfilePicture = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            post.setAuthorProfilePicture(authorProfilePicture);
+
+                            postAdapter.notifyItemChanged(posts.indexOf(post));
+                        });
                 }
             });
     }

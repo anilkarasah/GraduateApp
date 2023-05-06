@@ -26,6 +26,7 @@ public class CameraUtils {
     public static final int GET_FROM_GALLERY = 3;
     public static final int PERMISSION_REQUEST_CODE = 100;
     public static final int CAMERA_PERM_CODE = 101;
+    public static final int TWO_MEGABYTES = 2 * 1024 * 1024;
 
     public static void askCameraPermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

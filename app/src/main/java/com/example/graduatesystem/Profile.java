@@ -141,10 +141,9 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             });
 
         // SET PROFILE PICTURE AS IMAGE VIEW
-        final long TWO_MEGABYTES = 2 * 1024 * 1024;
         storage.getReference()
             .child("profiles/" + firebaseUser.getUid() + ".jpg")
-            .getBytes(TWO_MEGABYTES)
+            .getBytes(CameraUtils.TWO_MEGABYTES)
             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(bytes -> {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
