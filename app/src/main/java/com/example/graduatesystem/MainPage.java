@@ -12,32 +12,33 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.graduatesystem.entities.Model;
 import com.example.graduatesystem.entities.User;
+import com.example.graduatesystem.utils.RecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
 public class MainPage extends AppCompatActivity {
-
-    private TextView text_id;
-    private TextView text_fullName;
-    private TextView text_registrationYear;
-    private TextView text_graduationYear;
-    private TextView text_phoneNumber;
-    private TextView text_currentCompany;
-    private TextView text_graduationDegree;
-    private ImageView imageView_avatar;
+    private RecyclerView recyclerView;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
+
+    private final ArrayList<Model> models = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,67 +49,39 @@ public class MainPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        text_id = findViewById(R.id.textViewId);
-        text_fullName = findViewById(R.id.textViewFullName);
-        text_registrationYear = findViewById(R.id.textViewRegistrationYear);
-        text_graduationYear = findViewById(R.id.textViewGraduationYear);
-        text_phoneNumber = findViewById(R.id.textViewPhoneNumber);
-        text_currentCompany = findViewById(R.id.textViewCurrentCompany);
-        text_graduationDegree = findViewById(R.id.textViewGraduationDegree);
-        imageView_avatar = findViewById(R.id.imageViewMainAvatar);
+        recyclerView = findViewById(R.id.recyclerView);
 
-        imageView_avatar.setOnClickListener(view -> {
-            Intent profileIntent = new Intent(this, Profile.class);
-            startActivity(profileIntent);
-        });
+        models.add(new Model(Model.TYPE_POST, 0, "Bu bir gönderidir!"));
+        models.add(new Model(Model.TYPE_POST, 0, "Bu başka bir gönderi!"));
+        models.add(new Model(Model.TYPE_ANNOUNCEMENT, 0, "Bu da görselli bir gönderi!"));
+        models.add(new Model(Model.TYPE_POST, 0, "Lorem ipsum dolor sit amet!"));
+        models.add(new Model(Model.TYPE_POST, 0, "Bir şeyler deniyorum!"));
+        models.add(new Model(Model.TYPE_ANNOUNCEMENT, 0, "Bu da başka bir görselli gönderi!"));
+        models.add(new Model(Model.TYPE_POST, 0, "Bunu da ekleyelim!"));
 
-        String uid = getIntent().getExtras().getString("uid");
-        if (uid == null || TextUtils.isEmpty(uid)) {
-            Intent loginIntent = new Intent(this, LoginPage.class);
-            Toast.makeText(this, "Lütfen tekrar giriş yapın!", Toast.LENGTH_SHORT).show();
-            startActivity(loginIntent);
-            return;
-        }
-
-        text_id.setText(uid);
 
         db.collection("users")
-            .document(uid)
             .get()
             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-            .addOnSuccessListener(documentSnapshot -> {
-                Map<String, Object> map = documentSnapshot.getData();
-                String fullName = map.get(User.FULL_NAME).toString();
-                String registrationYear = map.get(User.REGISTRATION_YEAR).toString();
-                String graduationYear = map.get(User.GRADUATION_YEAR).toString();
+            .addOnSuccessListener(querySnapshot -> {
+                for (QueryDocumentSnapshot document : querySnapshot) {
+                    Map<String, Object> map = document.getData();
+                    String fullName = map.get(User.FULL_NAME).toString();
+                    int registrationYear = Integer.parseInt(map.get(User.REGISTRATION_YEAR).toString());
+                    int graduationYear = Integer.parseInt(map.get(User.GRADUATION_YEAR).toString());
 
-                Object phoneNumber = map.get(User.PHONE_NUMBER);
-                if (phoneNumber != null && !TextUtils.isEmpty(phoneNumber.toString()))
-                    text_phoneNumber.setText(phoneNumber.toString());
+                    Model model = new Model(
+                        Model.TYPE_USER,
+                        0,
+                        String.format("%s (%d-%d)", fullName, registrationYear, graduationYear)
+                    );
 
-                Object currentCompany = map.get(User.CURRENT_COMPANY);
-                if (currentCompany != null && !TextUtils.isEmpty(currentCompany.toString()))
-                    text_currentCompany.setText(currentCompany.toString());
-
-                Object degree = map.get(User.GRADUATION_DEGREE);
-                if (degree != null && !TextUtils.isEmpty(degree.toString()))
-                    text_graduationDegree.setText(degree.toString());
-
-                Toast.makeText(getApplicationContext(), "Başarıyla giriş yapıldı!", Toast.LENGTH_SHORT).show();
-
-                text_fullName.setText(fullName);
-                text_registrationYear.setText(registrationYear);
-                text_graduationYear.setText(graduationYear);
-            });
-
-        final long TWO_MEGABYTES = 2 * 1024 * 1024;
-        storage.getReference()
-            .child("profiles/" + uid + ".jpg")
-            .getBytes(TWO_MEGABYTES)
-            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-            .addOnSuccessListener(bytes -> {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imageView_avatar.setImageBitmap(bitmap);
+                    RecyclerAdapter recyclerAdapter = new RecyclerAdapter(models, this);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(recyclerAdapter);
+                }
             });
     }
 }

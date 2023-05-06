@@ -1,59 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainPage">
 
-    <TextView
-        android:id="@+id/textViewId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Id" />
-
-    <TextView
-        android:id="@+id/textViewFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Full Name" />
-
-    <TextView
-        android:id="@+id/textViewRegistrationYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register Year" />
-
-    <TextView
-        android:id="@+id/textViewGraduationYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Graduation Year" />
-
-    <TextView
-        android:id="@+id/textViewPhoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone Number" />
-
-    <TextView
-        android:id="@+id/textViewCurrentCompany"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Company" />
-
-    <TextView
-        android:id="@+id/textViewGraduationDegree"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Graduation Degree" />
-
-    <ImageView
-        android:id="@+id/imageViewMainAvatar"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:contentDescription="Profil resmi"
-        tools:srcCompat="@tools:sample/avatars" />
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
