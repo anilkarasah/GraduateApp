@@ -128,8 +128,16 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
                     text_currentCompany.setText(currentCompany.toString());
 
                 Object degree = map.get(User.GRADUATION_DEGREE);
-                if (degree != null)
-                    spinner_degree.setPrompt(degree.toString());
+                if (degree != null) {
+                    // select user's saved degree on the spinner
+                    int i = 0;
+                    String[] degreesList = getResources().getStringArray(R.array.degree_types);
+                    while (i < degreesList.length && !degree.equals(degreesList[i])) i++;
+
+                    if (i < degreesList.length) {
+                        spinner_degree.setSelection(i);
+                    }
+                }
             });
 
         // SET PROFILE PICTURE AS IMAGE VIEW
@@ -145,9 +153,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             });
 
         // SET SPINNER VALUES FOR STUDENT DEGREE
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-            this, R.array.degree_types, android.R.layout.simple_spinner_item
-        );
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter
+            .createFromResource(this, R.array.degree_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_degree.setAdapter(adapter);
         spinner_degree.setOnItemSelectedListener(this);

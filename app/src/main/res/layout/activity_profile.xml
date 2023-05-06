@@ -217,13 +217,12 @@
                     android:layout_width="320dp"
                     android:layout_height="48dp"
                     android:layout_marginBottom="12dp"
-                    android:autofillHints="date"
                     android:background="@drawable/custom_input"
                     android:drawableStart="@drawable/ic_business"
                     android:drawablePadding="8dp"
                     android:ems="10"
                     android:hint="@string/current_company_text"
-                    android:inputType="date"
+                    android:inputType="text"
                     android:paddingStart="16dp"
                     android:paddingEnd="12dp" />
 
