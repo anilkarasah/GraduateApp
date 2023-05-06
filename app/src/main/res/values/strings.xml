@@ -32,6 +32,8 @@
     <string name="new_password_text">Yeni Parola</string>
     <string name="current_company_text">Çalıştığınız Ülke, Şehir, Firma</string>
     <string name="phone_number_text">Telefon Numarası</string>
+    <string name="announcement_image">Duyuru görseli</string>
+    <string name="user_image">Profil fotoğrafı</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>
