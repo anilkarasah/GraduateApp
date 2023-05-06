@@ -52,18 +52,18 @@ public class SignupPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        text_fullName = (EditText) findViewById(R.id.textProfileFullName);
-        text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
-        text_password = (EditText) findViewById(R.id.textProfileCurrentPassword);
-        text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
-        text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
-        text_login = (TextView) findViewById(R.id.textViewLoginButton);
-        image_avatar = (ImageView) findViewById(R.id.imageViewAvatar);
+        text_fullName = findViewById(R.id.textSignupFullName);
+        text_emailAddress = findViewById(R.id.textSignupEmailAddress);
+        text_password = findViewById(R.id.textSignupPassword);
+        text_registrationYear = findViewById(R.id.textSignupRegistrationYear);
+        text_graduationYear = findViewById(R.id.textSignupGraduationYear);
+        text_login = findViewById(R.id.textViewLoginButton);
+        image_avatar = findViewById(R.id.imageSignupAvatar);
 
         Intent loginActivity = new Intent(this, LoginPage.class);
         text_login.setOnClickListener(view -> startActivity(loginActivity));
 
-        btn_signup = (Button) findViewById(R.id.buttonUpdateProfile);
+        btn_signup = findViewById(R.id.buttonSignup);
         btn_signup.setOnClickListener(view -> {
             String fullName = text_fullName.getText().toString();
             String emailAddress = text_emailAddress.getText().toString();
@@ -112,23 +112,24 @@ public class SignupPage extends AppCompatActivity {
 
                 Bundle bundle = result.getData().getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
-                image_avatar.setImageBitmap(bitmap);
+                Bitmap croppedBitmap = CameraUtils.cropBitmapToSquare(bitmap);
+                image_avatar.setImageBitmap(croppedBitmap);
             }
         );
 
-        btn_takePicture = (Button) findViewById(R.id.buttonProfileTakePicture);
+        btn_takePicture = findViewById(R.id.buttonSignupTakePicture);
         btn_takePicture.setOnClickListener(view -> {
             CameraUtils.askCameraPermissions(this);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
+            if (getPackageManager().resolveActivity(intent, 0) != null) {
                 activityResultLauncher.launch(intent);
             } else {
                 Toast.makeText(this, R.string.no_app_supporting, Toast.LENGTH_SHORT).show();
             }
         });
 
-        btn_uploadPicture = (Button) findViewById(R.id.buttonProfileUploadPicture);
+        btn_uploadPicture = findViewById(R.id.buttonSignupUploadPicture);
         btn_uploadPicture.setOnClickListener(view ->
             Toast.makeText(getApplicationContext(), "Resim yüklenecek!", Toast.LENGTH_SHORT).show());
     }
