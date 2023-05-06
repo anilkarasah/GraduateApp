@@ -19,4 +19,24 @@ public class CameraUtils {
             ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         }
     }
+
+    public static Bitmap cropBitmapToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width == height) return bitmap;
+
+        int crop;
+        Bitmap croppedBitmap;
+
+        if (width > height) {
+            crop = (width - height) / 2;
+            croppedBitmap = Bitmap.createBitmap(bitmap, crop, 0, height, height);
+        } else {
+            crop = (height - width) / 2;
+            croppedBitmap = Bitmap.createBitmap(bitmap, 0, crop, width, width);
+        }
+
+        return croppedBitmap;
+    }
 }
