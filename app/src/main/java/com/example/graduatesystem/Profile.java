@@ -101,6 +101,9 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             return;
         }
 
+        String emailAddress = firebaseUser.getEmail();
+        text_emailAddress.setText(emailAddress);
+
         // SET USER INFORMATION IN CORRESPONDING EDIT TEXT
         db.collection("users")
             .document(firebaseUser.getUid())
@@ -109,12 +112,10 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             .addOnSuccessListener(documentSnapshot -> {
                 map = documentSnapshot.getData();
                 String fullName = map.get(User.FULL_NAME).toString();
-                String emailAddress = map.get(User.EMAIL_ADDRESS).toString();
                 String registrationYear = map.get(User.REGISTRATION_YEAR).toString();
                 String graduationYear = map.get(User.GRADUATION_YEAR).toString();
 
                 text_fullName.setText(fullName);
-                text_emailAddress.setText(emailAddress);
                 text_registrationYear.setText(registrationYear);
                 text_graduationYear.setText(graduationYear);
 
@@ -228,20 +229,19 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
 
         // UPDATE EMAIL ADDRESS SECTION
         btn_updateEmailAddress.setOnClickListener(view -> {
-            String emailAddress = text_emailAddress.getText().toString();
-            firebaseUser.verifyBeforeUpdateEmail(emailAddress)
+            String newEmailAddress = text_emailAddress.getText().toString();
+            firebaseUser.verifyBeforeUpdateEmail(newEmailAddress)
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(unused -> db.collection("users")
                     .document(firebaseUser.getUid())
-                    .update(User.EMAIL_ADDRESS, emailAddress)
+                    .update(User.EMAIL_ADDRESS, newEmailAddress)
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                     .addOnSuccessListener(unused1 -> redirectToLogin()));
         });
 
         // UPDATE PASSWORD SECTION
         btn_updatePassword.setOnClickListener(view -> {
-            String emailAddress;
-            if (firebaseUser == null || (emailAddress = firebaseUser.getEmail()) == null) {
+            if (firebaseUser == null) {
                 redirectToLogin();
                 return;
             }

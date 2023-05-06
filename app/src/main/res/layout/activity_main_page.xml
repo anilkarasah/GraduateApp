@@ -21,12 +21,6 @@
         android:text="Full Name" />
 
     <TextView
-        android:id="@+id/textViewEmailAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username" />
-
-    <TextView
         android:id="@+id/textViewRegistrationYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,8 +52,8 @@
 
     <ImageView
         android:id="@+id/imageViewMainAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="profil resmi"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:contentDescription="Profil resmi"
         tools:srcCompat="@tools:sample/avatars" />
 </LinearLayout>
