@@ -48,14 +48,14 @@ public class MainPage extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        text_id = (TextView) findViewById(R.id.textViewId);
-        text_fullName = (TextView) findViewById(R.id.textViewFullName);
-        text_registrationYear = (TextView) findViewById(R.id.textViewRegistrationYear);
-        text_graduationYear = (TextView) findViewById(R.id.textViewGraduationYear);
-        text_phoneNumber = (TextView) findViewById(R.id.textViewPhoneNumber);
-        text_currentCompany = (TextView) findViewById(R.id.textViewCurrentCompany);
-        text_graduationDegree = (TextView) findViewById(R.id.textViewGraduationDegree);
-        imageView_avatar = (ImageView) findViewById(R.id.imageViewMainAvatar);
+        text_id = findViewById(R.id.textViewId);
+        text_fullName = findViewById(R.id.textViewFullName);
+        text_registrationYear = findViewById(R.id.textViewRegistrationYear);
+        text_graduationYear = findViewById(R.id.textViewGraduationYear);
+        text_phoneNumber = findViewById(R.id.textViewPhoneNumber);
+        text_currentCompany = findViewById(R.id.textViewCurrentCompany);
+        text_graduationDegree = findViewById(R.id.textViewGraduationDegree);
+        imageView_avatar = findViewById(R.id.imageViewMainAvatar);
 
         imageView_avatar.setOnClickListener(view -> {
             Intent profileIntent = new Intent(this, Profile.class);
