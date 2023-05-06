@@ -1,9 +1,12 @@
 package com.example.graduatesystem;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,9 +17,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.graduatesystem.entities.User;
+import com.example.graduatesystem.utils.CameraUtils;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 public class Profile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -63,25 +71,25 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        image_profilePicture = (ImageView) findViewById(R.id.imageViewAvatar);
-        btn_takePicture = (Button) findViewById(R.id.buttonProfileTakePicture);
-        btn_uploadPicture = (Button) findViewById(R.id.buttonProfileUploadPicture);
-        btn_updateProfilePicture = (Button) findViewById(R.id.buttonUpdatePicture);
+        image_profilePicture = findViewById(R.id.imageProfileAvatar);
+        btn_takePicture = findViewById(R.id.buttonProfileTakePicture);
+        btn_uploadPicture = findViewById(R.id.buttonProfileUploadPicture);
+        btn_updateProfilePicture = findViewById(R.id.buttonUpdatePicture);
 
-        text_fullName = (EditText) findViewById(R.id.textProfileFullName);
-        text_registrationYear = (EditText) findViewById(R.id.textProfileRegistrationYear);
-        text_graduationYear = (EditText) findViewById(R.id.textProfileGraduationYear);
-        text_currentCompany = (EditText) findViewById(R.id.textProfileCurrentCompany);
-        text_phoneNumber = (EditText) findViewById(R.id.textProfilePhoneNumber);
-        spinner_degree = (Spinner) findViewById(R.id.spinnerDegree);
-        btn_updateProfileInfo = (Button) findViewById(R.id.buttonUpdateProfile);
+        text_fullName = findViewById(R.id.textProfileFullName);
+        text_registrationYear = findViewById(R.id.textProfileRegistrationYear);
+        text_graduationYear = findViewById(R.id.textProfileGraduationYear);
+        text_currentCompany = findViewById(R.id.textProfileCurrentCompany);
+        text_phoneNumber = findViewById(R.id.textProfilePhoneNumber);
+        spinner_degree = findViewById(R.id.spinnerDegree);
+        btn_updateProfileInfo = findViewById(R.id.buttonUpdateProfile);
 
-        text_emailAddress = (EditText) findViewById(R.id.textProfileEmailAddress);
-        btn_updateEmailAddress = (Button) findViewById(R.id.buttonUpdateEmailAddress);
+        text_emailAddress = findViewById(R.id.textProfileEmailAddress);
+        btn_updateEmailAddress = findViewById(R.id.buttonUpdateEmailAddress);
 
-        text_currentPassword = (EditText) findViewById(R.id.textProfileCurrentPassword);
-        text_newPassword = (EditText) findViewById(R.id.textProfileNewPassword);
-        btn_updatePassword = (Button) findViewById(R.id.buttonUpdatePassword);
+        text_currentPassword = findViewById(R.id.textProfileCurrentPassword);
+        text_newPassword = findViewById(R.id.textProfileNewPassword);
+        btn_updatePassword = findViewById(R.id.buttonUpdatePassword);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -130,7 +138,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             .getBytes(TWO_MEGABYTES)
             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
             .addOnSuccessListener(bytes -> {
-                profilePictureBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                profilePictureBitmap = CameraUtils.cropBitmapToSquare(bitmap);
                 image_profilePicture.setImageBitmap(profilePictureBitmap);
             });
 
@@ -141,6 +150,47 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_degree.setAdapter(adapter);
         spinner_degree.setOnItemSelectedListener(this);
+
+        // TAKE PICTURE USING CAMERA
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() != RESULT_OK || result.getData() == null) {
+                    return;
+                }
+
+                Bundle bundle = result.getData().getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");
+                Bitmap croppedBitmap = CameraUtils.cropBitmapToSquare(bitmap);
+                image_profilePicture.setImageBitmap(croppedBitmap);
+            }
+        );
+
+        btn_takePicture.setOnClickListener(view -> {
+            CameraUtils.askCameraPermissions(this);
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (getPackageManager().resolveActivity(intent, 0) != null) {
+                activityResultLauncher.launch(intent);
+            } else {
+                Toast.makeText(this, R.string.no_app_supporting, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_updateProfilePicture.setOnClickListener(view -> {
+            byte[] updatedProfilePictureBytes = getBitmapData(image_profilePicture);
+
+            storage.getReference()
+                .child("profiles/" + firebaseUser.getUid() + ".jpg")
+                .putBytes(updatedProfilePictureBytes)
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(taskSnapshot -> {
+                    Toast.makeText(this, "Profil fotoğrafı başarıyla güncellendi!", Toast.LENGTH_SHORT).show();
+
+                    Intent mainPageIntent = new Intent(this, MainPage.class);
+                    startActivity(mainPageIntent);
+                });
+        });
 
         // UPDATE USER INFORMATION SECTION
         btn_updateProfileInfo.setOnClickListener(view -> {
@@ -217,10 +267,15 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         });
     }
 
-    private void redirectToLogin() {
-        Toast.makeText(this, "Lütfen tekrar giriş yapınız.", Toast.LENGTH_SHORT).show();
-        Intent loginIntent = new Intent(this, LoginPage.class);
-        startActivity(loginIntent);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CameraUtils.CAMERA_PERM_CODE) {
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, R.string.camera_permission_required, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -231,5 +286,18 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         selectedDegreeIndex = 0;
+    }
+
+    private void redirectToLogin() {
+        Toast.makeText(this, "Lütfen tekrar giriş yapınız.", Toast.LENGTH_SHORT).show();
+        Intent loginIntent = new Intent(this, LoginPage.class);
+        startActivity(loginIntent);
+    }
+
+    private byte[] getBitmapData(ImageView imageView) {
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 }
