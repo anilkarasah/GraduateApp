@@ -37,13 +37,26 @@ public class User {
         this.graduationYear = graduationYear;
         this.phoneNumber = phoneNumber;
         this.currentCompany = currentCompany;
-        this.graduationDegree = degree;
+
+        if (degree == null || TextUtils.isEmpty(degree)) {
+            this.graduationDegree = "Lisans";
+        } else {
+            this.graduationDegree = degree;
+        }
     }
 
     public User(String fullName, int registrationYear, int graduationYear, @Nullable String phoneNumber, @Nullable String currentCompany, @Nullable String degree) {
         this.fullName = fullName;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
+        this.phoneNumber = phoneNumber;
+        this.currentCompany = currentCompany;
+
+        if (degree == null || TextUtils.isEmpty(degree)) {
+            this.graduationDegree = "Lisans";
+        } else {
+            this.graduationDegree = degree;
+        }
     }
 
     public void setUid(String uid) {
@@ -78,28 +91,35 @@ public class User {
         this.graduationYear = graduationYear;
     }
 
+    @Nullable
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(@Nullable String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
+    @Nullable
     public String getCurrentCompany() {
         return currentCompany;
     }
 
-    public void setCurrentCompany(String currentCompany) {
+    public void setCurrentCompany(@Nullable String currentCompany) {
         this.currentCompany = currentCompany;
     }
 
+    @Nullable
     public String getGraduationDegree() {
         return graduationDegree;
     }
 
-    public void setGraduationDegree(String graduationDegree) {
-        this.graduationDegree = graduationDegree;
+    public void setGraduationDegree(@Nullable String graduationDegree) {
+        if (graduationDegree == null || TextUtils.isEmpty(graduationDegree)) {
+            this.graduationDegree = "Lisans";
+        } else {
+            this.graduationDegree = graduationDegree;
+        }
     }
 
     public boolean validateFullName() {
