@@ -2,6 +2,7 @@ package com.example.graduatesystem;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,6 +37,15 @@ public class LoginPage extends AppCompatActivity {
         btn_login.setOnClickListener(view -> {
             String emailAddress = text_emailAddress.getText().toString();
             String password = text_password.getText().toString();
+
+            if (TextUtils.isEmpty(emailAddress)) {
+                Toast.makeText(this, "Lütfen email adresinizi girin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(this, "Lütfen parolanızı girin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             mAuth.signInWithEmailAndPassword(emailAddress, password)
                 .addOnFailureListener(e -> Toast.makeText(this, "Email adresi veya parola hatalı!", Toast.LENGTH_SHORT).show())
