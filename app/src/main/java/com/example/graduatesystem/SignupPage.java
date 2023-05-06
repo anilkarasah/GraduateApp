@@ -1,10 +1,8 @@
 package com.example.graduatesystem;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentResolver;
@@ -32,7 +30,6 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class SignupPage extends AppCompatActivity {
@@ -111,42 +108,8 @@ public class SignupPage extends AppCompatActivity {
                 });
         });
 
-        ActivityResultLauncher<Intent> takePictureActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() != RESULT_OK || result.getData() == null) {
-                    return;
-                }
-
-                Bundle bundle = result.getData().getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
-                Bitmap croppedBitmap = CameraUtils.cropBitmapToSquare(bitmap);
-                image_avatar.setImageBitmap(croppedBitmap);
-            }
-        );
-
-        ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() != RESULT_OK || result.getData() == null) {
-                    return;
-                }
-
-                Uri imageUri = result.getData().getData();
-                ContentResolver contentResolver = getContentResolver();
-                InputStream inputStream;
-                try {
-                    inputStream = contentResolver.openInputStream(imageUri);
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                Bitmap croppedBitmap = CameraUtils.cropBitmapToSquare(bitmap);
-                image_avatar.setImageBitmap(croppedBitmap);
-            }
-        );
+        ActivityResultLauncher<Intent> takePictureActivityResultLauncher = CameraUtils
+            .configureTakePictureLauncher(this, croppedBitmap -> image_avatar.setImageBitmap(croppedBitmap));
 
         btn_takePicture = findViewById(R.id.buttonSignupTakePicture);
         btn_takePicture.setOnClickListener(view -> {
@@ -159,6 +122,9 @@ public class SignupPage extends AppCompatActivity {
                 Toast.makeText(this, R.string.no_app_supporting, Toast.LENGTH_SHORT).show();
             }
         });
+
+        ActivityResultLauncher<Intent> uploadPictureActivityResultLauncher = CameraUtils
+            .configureUploadPictureLauncher(this, croppedBitmap -> image_avatar.setImageBitmap(croppedBitmap));
 
         btn_uploadPicture = findViewById(R.id.buttonSignupUploadPicture);
         btn_uploadPicture.setOnClickListener(view -> {

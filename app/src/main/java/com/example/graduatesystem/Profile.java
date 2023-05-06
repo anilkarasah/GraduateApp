@@ -153,26 +153,31 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         spinner_degree.setOnItemSelectedListener(this);
 
         // TAKE PICTURE USING CAMERA
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() != RESULT_OK || result.getData() == null) {
-                    return;
-                }
-
-                Bundle bundle = result.getData().getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
-                Bitmap croppedBitmap = CameraUtils.cropBitmapToSquare(bitmap);
-                image_profilePicture.setImageBitmap(croppedBitmap);
-            }
-        );
+        ActivityResultLauncher<Intent> takePictureLauncher = CameraUtils
+            .configureTakePictureLauncher(this, croppedBitmap -> image_profilePicture.setImageBitmap(croppedBitmap));
 
         btn_takePicture.setOnClickListener(view -> {
             CameraUtils.askCameraPermissions(this);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (getPackageManager().resolveActivity(intent, 0) != null) {
-                activityResultLauncher.launch(intent);
+                takePictureLauncher.launch(intent);
+            } else {
+                Toast.makeText(this, R.string.no_app_supporting, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // UPLOAD PICTURE FROM EXTERNAL SOURCES
+        ActivityResultLauncher<Intent> uploadPictureLauncher = CameraUtils
+            .configureUploadPictureLauncher(this, croppedBitmap -> image_profilePicture.setImageBitmap(croppedBitmap));
+
+        btn_uploadPicture.setOnClickListener(view -> {
+            CameraUtils.askGalleryPermissions(this);
+
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            if (getPackageManager().resolveActivity(intent, 0) != null) {
+                uploadPictureLauncher.launch(intent);
             } else {
                 Toast.makeText(this, R.string.no_app_supporting, Toast.LENGTH_SHORT).show();
             }
