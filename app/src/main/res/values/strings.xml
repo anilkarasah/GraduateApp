@@ -35,6 +35,8 @@
     <string name="announcement_image">Duyuru görseli</string>
     <string name="user_image">Profil fotoğrafı</string>
     <string name="valid_until_prompt">Geçerlilik tarihi:</string>
+    <string name="logout_button">Çıkış Yap</string>
+    <string name="menu_button">Menü</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>

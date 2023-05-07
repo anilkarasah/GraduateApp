@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -56,6 +57,9 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
     private EditText text_newPassword;
     private Button btn_updatePassword;
 
+
+    private TextView btn_logout;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -90,6 +94,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         text_currentPassword = findViewById(R.id.textProfileCurrentPassword);
         text_newPassword = findViewById(R.id.textProfileNewPassword);
         btn_updatePassword = findViewById(R.id.buttonUpdatePassword);
+
+        btn_logout = findViewById(R.id.textViewLogout);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -275,6 +281,15 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
                             redirectToLogin();
                         });
                 });
+        });
+
+        btn_logout.setOnClickListener(view -> {
+            mAuth.signOut();
+
+            Toast.makeText(this, "Başarıyla çıkış yapıldı!", Toast.LENGTH_SHORT).show();
+
+            Intent loginIntent = new Intent(this, LoginPage.class);
+            startActivity(loginIntent);
         });
     }
 
