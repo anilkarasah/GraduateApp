@@ -2,9 +2,12 @@ package com.example.graduatesystem.entities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.graduatesystem.LoginPage;
@@ -14,7 +17,7 @@ import java.util.Date;
 
 import javax.annotation.Nullable;
 
-public class User {
+public class User implements Parcelable {
     public static final String UID = "uid";
     public static final String FULL_NAME = "fullName";
     public static final String EMAIL_ADDRESS = "emailAddress";
@@ -34,19 +37,23 @@ public class User {
     private String currentCompany;
     @Nullable
     private String graduationDegree;
+    @Nullable
+    private String emailAddress;
 
+    @Nullable
     public Bitmap profilePicture;
 
     public User() {
     }
 
-    public User(String uid, String fullName, int registrationYear, int graduationYear, @Nullable String phoneNumber, @Nullable String currentCompany, @Nullable String degree) {
+    public User(String uid, String fullName, int registrationYear, int graduationYear, @Nullable String phoneNumber, @Nullable String currentCompany, @Nullable String degree, @Nullable String emailAddress) {
         this.uid = uid;
         this.fullName = fullName;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
         this.phoneNumber = phoneNumber;
         this.currentCompany = currentCompany;
+        this.emailAddress = emailAddress;
 
         if (degree == null || TextUtils.isEmpty(degree)) {
             this.graduationDegree = "Lisans";
@@ -55,12 +62,13 @@ public class User {
         }
     }
 
-    public User(String fullName, int registrationYear, int graduationYear, @Nullable String phoneNumber, @Nullable String currentCompany, @Nullable String degree) {
+    public User(String fullName, int registrationYear, int graduationYear, @Nullable String phoneNumber, @Nullable String currentCompany, @Nullable String degree, @Nullable String emailAddress) {
         this.fullName = fullName;
         this.registrationYear = registrationYear;
         this.graduationYear = graduationYear;
         this.phoneNumber = phoneNumber;
         this.currentCompany = currentCompany;
+        this.emailAddress = emailAddress;
 
         if (degree == null || TextUtils.isEmpty(degree)) {
             this.graduationDegree = "Lisans";
@@ -132,6 +140,15 @@ public class User {
         }
     }
 
+    @Nullable
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(@Nullable String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     public boolean validateFullName() {
         return !TextUtils.isEmpty(fullName);
     }
@@ -157,5 +174,45 @@ public class User {
             Intent loginIntent = new Intent(activity, LoginPage.class);
             activity.startActivity(loginIntent);
         }
+    }
+
+    protected User(Parcel in) {
+        this.uid = in.readString();
+        this.fullName = in.readString();
+        this.registrationYear = in.readInt();
+        this.graduationYear = in.readInt();
+        this.graduationDegree = in.readString();
+        this.phoneNumber = in.readString();
+        this.currentCompany = in.readString();
+        this.emailAddress = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel parcel) {
+            return new User(parcel);
+        }
+
+        @Override
+        public User[] newArray(int i) {
+            return new User[i];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
+        parcel.writeString(uid);
+        parcel.writeString(fullName);
+        parcel.writeInt(registrationYear);
+        parcel.writeInt(graduationYear);
+        parcel.writeString(graduationDegree);
+        parcel.writeString(phoneNumber);
+        parcel.writeString(currentCompany);
+        parcel.writeString(emailAddress);
     }
 }

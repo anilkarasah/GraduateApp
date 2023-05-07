@@ -78,7 +78,7 @@ public class SignupPage extends AppCompatActivity {
             int registrationYear = Integer.parseInt(text_registrationYear.getText().toString());
             int graduationYear = Integer.parseInt(text_graduationYear.getText().toString());
 
-            User user = new User(fullName, registrationYear, graduationYear, null, null, null);
+            User user = new User(fullName, registrationYear, graduationYear, null, null, null, emailAddress);
 
             if (!validateUserData(user, emailAddress)) {
                 return;
@@ -97,6 +97,7 @@ public class SignupPage extends AppCompatActivity {
 
                     String uid = firebaseUser.getUid();
                     user.setUid(uid);
+                    user.setEmailAddress(firebaseUser.getEmail());
                     db.collection("users")
                         .document(uid)
                         .set(user)

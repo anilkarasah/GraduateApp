@@ -2,12 +2,17 @@ package com.example.graduatesystem.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +27,7 @@ import java.util.Locale;
 public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<User> users;
     Context mContext;
+    OnClickCallback callback;
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layout_userHolder;
@@ -39,9 +45,10 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public UserAdapter(ArrayList<User> users, Context context) {
+    public UserAdapter(ArrayList<User> users, Context context, OnClickCallback callback) {
         this.users = users;
         this.mContext = context;
+        this.callback = callback;
     }
 
     @NonNull
@@ -67,14 +74,16 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         viewHolder.text_years.setText(years);
 
         viewHolder.layout_userHolder.setOnClickListener(view -> {
-            Intent userPageIntent = new Intent(mContext, UserPage.class);
-            userPageIntent.putExtra("uid", user.getUid());
-            mContext.startActivity(userPageIntent);
+            callback.onItemClick(user);
         });
     }
 
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    public interface OnClickCallback {
+        void onItemClick(User user);
     }
 }
