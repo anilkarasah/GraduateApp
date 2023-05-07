@@ -80,7 +80,6 @@
                 android:ems="10"
                 android:hint="@string/post_text"
                 android:inputType="text"
-                android:minHeight="120dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="12dp" />
 
