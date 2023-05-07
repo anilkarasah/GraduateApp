@@ -136,4 +136,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textMenuMyPosts" />
 
+    <TextView
+        android:id="@+id/textMenuStudentsPage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawablePadding="16dp"
+        android:padding="32dp"
+        android:text="@string/title_students_page"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_person_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textMenuMyPosts" />
+
+    <View
+        android:id="@+id/divider10"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textMenuStudentsPage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

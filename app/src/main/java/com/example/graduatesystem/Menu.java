@@ -28,6 +28,7 @@ public class Menu extends AppCompatActivity {
 
     TextView text_mainPage;
     TextView text_myPosts;
+    TextView text_studentsPage;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -45,6 +46,7 @@ public class Menu extends AppCompatActivity {
         text_fullName = findViewById(R.id.textMenuFullName);
         text_mainPage = findViewById(R.id.textMenuMainPage);
         text_myPosts = findViewById(R.id.textMenuMyPosts);
+        text_studentsPage = findViewById(R.id.textMenuStudentsPage);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -64,6 +66,11 @@ public class Menu extends AppCompatActivity {
         text_myPosts.setOnClickListener(view -> {
             Intent myPostsIntent = new Intent(this, MyPosts.class);
             startActivity(myPostsIntent);
+        });
+
+        text_studentsPage.setOnClickListener(view -> {
+            Intent studentsPageIntent = new Intent(this, StudentsPage.class);
+            startActivity(studentsPageIntent);
         });
 
         // IMPORT DATA FOR PROFILE SECTION

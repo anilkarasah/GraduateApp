@@ -22,6 +22,12 @@
         android:theme="@style/Theme.GraduateSystem"
         tools:targetApi="31">
         <activity
+            android:name=".UserPage"
+            android:exported="false" />
+        <activity
+            android:name=".StudentsPage"
+            android:exported="false" />
+        <activity
             android:name=".CreatePost"
             android:exported="false" />
         <activity

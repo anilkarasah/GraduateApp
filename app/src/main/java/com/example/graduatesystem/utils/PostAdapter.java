@@ -21,7 +21,6 @@ import java.util.Locale;
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<Post> posts;
     Context mContext;
-    int postsCount;
 
     public static class TextViewHolder extends RecyclerView.ViewHolder {
         ImageView image_authorPicture;
@@ -44,8 +43,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public PostAdapter(ArrayList<Post> data, Context context) {
         this.posts = data;
         this.mContext = context;
-
-        postsCount = data.size();
     }
 
     @NonNull

@@ -1,6 +1,7 @@
 package com.example.graduatesystem.entities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class User {
     private String currentCompany;
     @Nullable
     private String graduationDegree;
+
+    public Bitmap profilePicture;
 
     public User() {
     }
