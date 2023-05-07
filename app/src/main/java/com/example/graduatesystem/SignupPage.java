@@ -25,8 +25,10 @@ import com.example.graduatesystem.entities.User;
 import com.example.graduatesystem.utils.CameraUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -87,6 +89,12 @@ public class SignupPage extends AppCompatActivity {
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser firebaseUser = authResult.getUser();
 
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(fullName)
+                        .build();
+
+                    firebaseUser.updateProfile(profileChangeRequest);
+
                     String uid = firebaseUser.getUid();
                     user.setUid(uid);
                     db.collection("users")
@@ -94,17 +102,17 @@ public class SignupPage extends AppCompatActivity {
                         .set(user)
                         .addOnFailureListener(e -> Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show());
 
+                    firebaseUser.sendEmailVerification()
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(this, "Başarıyla kayıt oldunuz!", Toast.LENGTH_SHORT).show();
+                            startActivity(loginActivity);
+                        });
+
                     byte[] data = getBitmapData(image_avatar);
                     storage.getReference()
                         .child("profiles/" + uid + ".jpg")
                         .putBytes(data)
-                        .addOnFailureListener(e -> Log.d("signup/storage", e.toString()));
-
-                    firebaseUser.sendEmailVerification()
-                        .addOnCompleteListener(task -> {
-                            Toast.makeText(this, "Başarıyla kayıt oldunuz!", Toast.LENGTH_SHORT).show();
-                            startActivity(loginActivity);
-                        });
+                        .addOnFailureListener(e -> Log.i("SignupPage/Storage", e.getMessage()));
                 });
         });
 

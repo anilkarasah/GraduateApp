@@ -19,20 +19,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.graduatesystem.entities.User;
+import com.example.graduatesystem.utils.CacheUtils;
 import com.example.graduatesystem.utils.CameraUtils;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Map;
 
 public class Profile extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -57,6 +59,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
     private EditText text_newPassword;
     private Button btn_updatePassword;
 
+    private Button btn_menu;
 
     private TextView btn_logout;
 
@@ -74,6 +77,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        User.assertAuthentication(this);
 
         image_profilePicture = findViewById(R.id.imageProfileAvatar);
         btn_takePicture = findViewById(R.id.buttonProfileTakePicture);
@@ -97,15 +102,18 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
 
         btn_logout = findViewById(R.id.textViewLogout);
 
+        btn_menu = findViewById(R.id.buttonProfileMenu);
+
+        btn_menu.setOnClickListener(view -> {
+            Intent menuIntent = new Intent(this, Menu.class);
+            startActivity(menuIntent);
+        });
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
         firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser == null) {
-            redirectToLogin();
-            return;
-        }
 
         String emailAddress = firebaseUser.getEmail();
         text_emailAddress.setText(emailAddress);
@@ -147,15 +155,22 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             });
 
         // SET PROFILE PICTURE AS IMAGE VIEW
-        storage.getReference()
-            .child("profiles/" + firebaseUser.getUid() + ".jpg")
-            .getBytes(CameraUtils.TWO_MEGABYTES)
-            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-            .addOnSuccessListener(bytes -> {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                profilePictureBitmap = CameraUtils.cropBitmapToSquare(bitmap);
-                image_profilePicture.setImageBitmap(profilePictureBitmap);
-            });
+        final File profilePictureFile = CacheUtils.getCacheChildDir(this, firebaseUser.getUid());
+        Bitmap profilePicture = CacheUtils.getBitmap(profilePictureFile);
+
+        if (profilePicture != null) {
+            image_profilePicture.setImageBitmap(profilePicture);
+        } else {
+            storage.getReference()
+                .child("profiles/" + firebaseUser.getUid() + ".jpg")
+                .getBytes(CameraUtils.TWO_MEGABYTES)
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(bytes -> {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    CacheUtils.setBitmap(profilePictureFile, bitmap);
+                    image_profilePicture.setImageBitmap(bitmap);
+                });
+        }
 
         // SET SPINNER VALUES FOR STUDENT DEGREE
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
@@ -196,7 +211,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         });
 
         btn_updateProfilePicture.setOnClickListener(view -> {
-            byte[] updatedProfilePictureBytes = getBitmapData(image_profilePicture);
+            Bitmap updatedProfilePictureBitmap = ((BitmapDrawable) image_profilePicture.getDrawable()).getBitmap();
+            byte[] updatedProfilePictureBytes = getBitmapData(updatedProfilePictureBitmap);
 
             storage.getReference()
                 .child("profiles/" + firebaseUser.getUid() + ".jpg")
@@ -204,6 +220,8 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(taskSnapshot -> {
                     Toast.makeText(this, "Profil fotoğrafı başarıyla güncellendi!", Toast.LENGTH_SHORT).show();
+
+                    CacheUtils.setBitmap(profilePictureFile, updatedProfilePictureBitmap);
 
                     Intent mainPageIntent = new Intent(this, MainPage.class);
                     startActivity(mainPageIntent);
@@ -221,9 +239,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             String[] degreesList = getResources().getStringArray(R.array.degree_types);
             String selectedDegree = degreesList[this.selectedDegreeIndex];
 
-            if (user == null) {
-                redirectToLogin();
-            }
+            String uid = firebaseUser.getUid();
 
             map.put(User.FULL_NAME, fullName);
             map.put(User.REGISTRATION_YEAR, registrationYear);
@@ -233,11 +249,17 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
             map.put(User.GRADUATION_DEGREE, selectedDegree);
 
             db.collection("users")
-                .document(firebaseUser.getUid())
+                .document(uid)
                 .update(map)
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Profil bilgileri başarıyla güncellendi.", Toast.LENGTH_SHORT).show();
+
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(fullName)
+                        .build();
+
+                    firebaseUser.updateProfile(profileChangeRequest);
 
                     Intent mainPageIntent = new Intent(this, MainPage.class);
                     startActivity(mainPageIntent);
@@ -320,8 +342,7 @@ public class Profile extends AppCompatActivity implements AdapterView.OnItemSele
         startActivity(loginIntent);
     }
 
-    private byte[] getBitmapData(ImageView imageView) {
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+    private byte[] getBitmapData(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();

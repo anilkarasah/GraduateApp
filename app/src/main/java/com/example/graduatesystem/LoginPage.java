@@ -28,11 +28,11 @@ public class LoginPage extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        text_emailAddress = (EditText) findViewById(R.id.textLoginEmailAddress);
-        text_password = (EditText) findViewById(R.id.textLoginPassword);
-        btn_login = (Button) findViewById(R.id.buttonLogin);
-        btn_signup = (TextView) findViewById(R.id.buttonRedirectSignup);
-        btn_forgotPassword = (TextView) findViewById(R.id.buttonRedirectForgotPassword);
+        text_emailAddress = findViewById(R.id.textLoginEmailAddress);
+        text_password = findViewById(R.id.textLoginPassword);
+        btn_login = findViewById(R.id.buttonLogin);
+        btn_signup = findViewById(R.id.buttonRedirectSignup);
+        btn_forgotPassword = findViewById(R.id.buttonRedirectForgotPassword);
 
         btn_login.setOnClickListener(view -> {
             String emailAddress = text_emailAddress.getText().toString();

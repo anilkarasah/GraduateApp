@@ -1,6 +1,13 @@
 package com.example.graduatesystem.entities;
 
+import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.graduatesystem.LoginPage;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Date;
 
@@ -136,5 +143,16 @@ public class User {
 
     public boolean validateRegisterAndGraduationYears() {
         return graduationYear > registrationYear;
+    }
+
+    public static void assertAuthentication(AppCompatActivity activity) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(activity, "Lütfen tekrar giriş yapınız.", Toast.LENGTH_SHORT).show();
+
+            Intent loginIntent = new Intent(activity, LoginPage.class);
+            activity.startActivity(loginIntent);
+        }
     }
 }

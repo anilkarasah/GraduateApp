@@ -37,11 +37,17 @@
     <string name="valid_until_prompt">Geçerlilik tarihi:</string>
     <string name="logout_button">Çıkış Yap</string>
     <string name="menu_button">Menü</string>
+    <string name="goto_profile_prompt">Profilinizi görüntüleyin</string>
+    <string name="add_post_button">Duyuru oluşturun</string>
+    <string name="enter_due_date">Geçerlilik tarihi giriniz</string>
+    <string name="post_text">Duyuru İçeriği</string>
+    <string name="create_button">Oluştur</string>
 
     <string name="title_login_page">Sisteme Giriş Yap</string>
     <string name="title_signup_page">Hesap Oluştur</string>
     <string name="title_profile_page">Profiliniz</string>
     <string name="title_main_page">Ana Sayfa</string>
+    <string name="title_my_posts_page">Duyurularım</string>
 
     <string-array name="degree_types">
         <item>Lisans</item>
